@@ -132,6 +132,12 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   byte  Plus_Key_X;
   byte  Minus_Key_X; 
   byte  Stop_Key_X;
+  bool  Menu_Complete_Settings;
+  bool  Menu_Complete_Alarms;
+  bool  Menu_Complete_Sensors;
+  bool  Menu_Complete_Motion;
+  bool  Menu_Complete_NAVI;
+  bool  Menu_Complete_Tracking;  
   bool  Menu_Complete;
   byte  Menu_Mode_Selection;
   int   Menu_View;
@@ -311,6 +317,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   bool  WIFI_Enabled_EEPROM;
   bool  Cutting_Blades_Activate_EEPROM;
   int   Low_Battery_Instances_Chg_EEPROM;
+  int   Alarm_1_Action_EEPROM;
 
   
 /***********************************************************************************************
@@ -329,7 +336,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
 ****************************************************************************************************/
 
-  char Version[16] = "V6.9";
+  char Version[16] = "V7.0";
 
   bool Cutting_Blades_Activate    = 1;     // EEPROM            // Activates the cutting blades and disc in the code
   bool WIFI_Enabled               = 1;     // EEPROM            // Activates the WIFI Fucntions
@@ -419,12 +426,14 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   int  Alarm_1_Hour               = 12;      //EEPROM            // Mowing Hour Number 1
   int  Alarm_1_Minute             = 00;      //EEPROM            // Alarm Minute 1
   bool Alarm_1_Repeat             = 0;                           // Repeat the Alarm at the same time
+  int  Alarm_1_Action             = 1;       //EEPROM            // Sets the actions to be performed when the alarm is called
 
   // Action for Alarm 2 can be set in "void Activate_Alarms()" 
   bool Alarm_2_ON                 = 0;       //EEPROM            // Activate Alarm 2 (1 = ON 0 = OFF)
   int  Alarm_2_Hour               = 12;      //EEPROM            // Mowing Hour Number 2
   int  Alarm_2_Minute             = 00;      //EEPROM            // Alarm minute 2
   bool Alarm_2_Repeat             = 0;                           // Repeat the Alarm at the same time
+  int  Alarm_2_Action             = 1;       //EEPROM            // Sets the actions to be performed when the alarm is called
 
   // Action for Alarm 3 can be set in "void Activate_Alarms()" 
   // Go Home Alarm
@@ -432,6 +441,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   int  Alarm_3_Hour               = 12;      //EEPROM            // Mowing Hour Number 3
   int  Alarm_3_Minute             = 00;      //EEPROM            // Alarm minute 3
   bool Alarm_3_Repeat             = 0;                           // Repeat the Alarm at the same time
+  int  Alarm_3_Action             = 1;       //EEPROM            // Sets the actions to be performed when the alarm is called
 
   byte Alarm_Second               = 5;                            // Seconds
 

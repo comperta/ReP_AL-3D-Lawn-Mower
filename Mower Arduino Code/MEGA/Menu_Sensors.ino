@@ -27,11 +27,11 @@ void Print_Membrane_Switch_Input_Sensors() {
 
       Serial.println();
       Serial.println(F("Sensors Menu Activated"));
-      Menu_Complete = false;                                // Menu complete will return to the normal loop
+      Menu_Complete_Sensors = false;                                // Menu complete will return to the normal loop
       lcd.clear();
       delay(5);
       
-      while (Menu_Complete == false) {                      // holds the program in a loop until a selection has been made in the membrane button menu
+      while (Menu_Complete_Sensors == false) {                      // holds the program in a loop until a selection has been made in the membrane button menu
         if (Menu_View == 0) {
           lcd.setCursor(1,0);
           Print_LCD_Menu_Sensors(1);
@@ -43,7 +43,7 @@ void Print_Membrane_Switch_Input_Sensors() {
         delay(100);
              
         if(!Start_Key_X){
-          Menu_Complete = true;
+          Menu_Complete_Sensors = true;
           Serial.println(F("Start key is pressed"));
           Activate_Menu_Option_Sensors();
           lcd.clear();
@@ -60,17 +60,15 @@ void Print_Membrane_Switch_Input_Sensors() {
         }
         if(!Stop_Key_X){
           Serial.println(F("Stop key is pressed"));
-          Menu_Complete = true;
+          Menu_Complete_Sensors = true;
           lcd.clear();
           lcd.setCursor(0,0);
           lcd.print("Exit Sensors");
           delay(1000);
           lcd.clear();          
           Menu_Mode_Selection = 0;
-          Print_Membrane_Switch_Input_Settings();
           }
       }
-    //Activate_Menu_Option_Sensors();
     }
 
     
@@ -121,8 +119,8 @@ void Activate_Menu_Option_Sensors() {
        if (Sonar_3_Activate == 0) lcd.print("N");
        delay(2000);
 
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_Sensors = false;
+       while (Menu_Complete_Sensors == false) {
              Read_Membrane_Keys();
              delay(100);
              //Enter Code Here to Cycle until stop key is pressed.
@@ -142,7 +140,7 @@ void Activate_Menu_Option_Sensors() {
                EEPROM.write(41, 1);
                EEPROM.write(42, Sonar_3_Activate);
                Menu_Mode_Selection = 0;
-               Menu_Complete = true;
+               Menu_Complete_Sensors = true;
                }
 
              
@@ -303,14 +301,14 @@ void Activate_Menu_Option_Sensors() {
        lcd.print(maxdistancesonar);
        Serial.print(F("Sonar Distnace = :"));
        Serial.println(maxdistancesonar);
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_Sensors = false;
+       while (Menu_Complete_Sensors == false) {
              Read_Membrane_Keys();
              delay(100);
              //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
              Serial.println(F("Settings Saved"));
-             Menu_Complete = true;
+             Menu_Complete_Sensors = true;
              lcd.clear();
              lcd.setCursor(0,0);
              lcd.print(F("cm = "));
@@ -365,14 +363,14 @@ void Activate_Menu_Option_Sensors() {
        lcd.print(Max_Sonar_Hit);
        Serial.print(F("Sonar Sensitivity = :"));
        Serial.println(Max_Sonar_Hit);
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_Sensors = false;
+       while (Menu_Complete_Sensors == false) {
              Read_Membrane_Keys();
              delay(100);
              //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
              Serial.println(F("Settings Saved"));
-             Menu_Complete = true;
+             Menu_Complete_Sensors = true;
              lcd.clear();
              lcd.setCursor(0,0);
              lcd.print("Hits : ");
@@ -426,14 +424,14 @@ void Activate_Menu_Option_Sensors() {
        lcd.print(Battery_Min);
        Serial.print(F("Battery Minimum Volt = :"));
        Serial.println(Battery_Min);
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_Sensors = false;
+       while (Menu_Complete_Sensors == false) {
              Read_Membrane_Keys();
              delay(100);
              //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
              Serial.println(F("Settings Saved"));
-             Menu_Complete = true;
+             Menu_Complete_Sensors = true;
              lcd.clear();
              lcd.setCursor(0,0);
              lcd.print("V = ");
@@ -485,14 +483,14 @@ void Activate_Menu_Option_Sensors() {
        lcd.print(Low_Battery_Instances_Chg);
        Serial.print(F("Batt Sensitivity = :"));
        Serial.println(Low_Battery_Instances_Chg);
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_Sensors = false;
+       while (Menu_Complete_Sensors == false) {
              Read_Membrane_Keys();
              delay(100);
              //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
              Serial.println(F("Settings Saved"));
-             Menu_Complete = true;
+             Menu_Complete_Sensors = true;
              lcd.clear();
              lcd.setCursor(0,0);
              lcd.print("Hits : ");
@@ -550,14 +548,14 @@ void Activate_Menu_Option_Sensors() {
        if (Perimeter_Wire_Enabled == 1) lcd.print(F("ON "));
        if (Perimeter_Wire_Enabled == 0) lcd.print(F("OFF"));
        
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_Sensors = false;
+       while (Menu_Complete_Sensors == false) {
           Read_Membrane_Keys();
           delay(100);
           //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
                Serial.println(F("Wire Sensor ON/OFF Settings Saved"));
-               Menu_Complete = true;
+               Menu_Complete_Sensors = true;
                lcd.clear();
                lcd.setCursor(0,0);
                lcd.print(F("Wire Sensor"));
@@ -610,14 +608,14 @@ void Activate_Menu_Option_Sensors() {
        if (Rain_Sensor_Installed == 1) lcd.print(F("ON "));
        if (Rain_Sensor_Installed == 0) lcd.print(F("OFF"));
        
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_Sensors = false;
+       while (Menu_Complete_Sensors == false) {
           Read_Membrane_Keys();
           delay(100);
           //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
                Serial.println(F("Rain Sensor ON/OFF Settings Saved"));
-               Menu_Complete = true;
+               Menu_Complete_Sensors = true;
                lcd.clear();
                lcd.setCursor(0,0);
                lcd.print(F("Rain Sensor"));
@@ -667,14 +665,14 @@ void Activate_Menu_Option_Sensors() {
        lcd.print(Rain_Total_Hits_Go_Home);
        Serial.print(F("Rain Sensitivity = :"));
        Serial.println(Rain_Total_Hits_Go_Home);
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_Sensors = false;
+       while (Menu_Complete_Sensors == false) {
              Read_Membrane_Keys();
              delay(100);
              //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
              Serial.println(F("Settings Saved"));
-             Menu_Complete = true;
+             Menu_Complete_Sensors = true;
              lcd.clear();
              lcd.setCursor(0,0);
              lcd.print("Hits : ");
@@ -731,14 +729,14 @@ void Activate_Menu_Option_Sensors() {
        if (WIFI_Enabled == 1) lcd.print(F("Enabled "));
        if (WIFI_Enabled == 0) lcd.print(F("Disabled"));
        
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_Sensors = false;
+       while (Menu_Complete_Sensors == false) {
           Read_Membrane_Keys();
           delay(100);
           //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
                Serial.println(F("Rain Sensor ON/OFF Settings Saved"));
-               Menu_Complete = true;
+               Menu_Complete_Sensors = true;
                lcd.clear();
                lcd.setCursor(0,0);
                lcd.print(F("WIFI Function"));
@@ -767,7 +765,7 @@ void Activate_Menu_Option_Sensors() {
              if (!Minus_Key_X) {
                lcd.setCursor(0,1);
                lcd.print(F("Status: "));
-               Rain_Sensor_Installed = 0;
+               WIFI_Enabled = 0;
                lcd.print(F("Disabled"));
                Serial.print(F("Status:"));
                Serial.println(WIFI_Enabled);
@@ -777,5 +775,5 @@ void Activate_Menu_Option_Sensors() {
      }
 
 
-Print_Membrane_Switch_Input_Sensors();
+if (Menu_Complete_Sensors = true) Print_Membrane_Switch_Input_Sensors();
 }

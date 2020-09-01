@@ -19,17 +19,17 @@ void Print_LCD_Menu_Motion(byte LCD_Menu_Motion) {
 
 void Print_Membrane_Switch_Input_Motion() {
      Read_Membrane_Keys();
-     Menu_Complete = 1;
+     Menu_Complete_Motion = 1;
      Menu_Mode_Selection = 0;
      Menu_View = 0;
 
       Serial.println();
       Serial.println(F("Motion Menu Activated"));
-      Menu_Complete = false;                                // Menu complete will return to the normal loop
+      Menu_Complete_Motion = false;                                // Menu complete will return to the normal loop
       lcd.clear();
       delay(5);
       
-      while (Menu_Complete == false) {                      // holds the program in a loop until a selection has been made in the membrane button menu
+      while (Menu_Complete_Motion == false) {                      // holds the program in a loop until a selection has been made in the membrane button menu
         if (Menu_View == 0) {
           lcd.setCursor(1,0);
           Print_LCD_Menu_Motion(1);
@@ -41,7 +41,7 @@ void Print_Membrane_Switch_Input_Motion() {
         delay(100);
              
         if(!Start_Key_X){
-          Menu_Complete = true;
+          Menu_Complete_Motion = true;
           Serial.println(F("Start key is pressed"));
           Activate_Menu_Option_Motion();
           lcd.clear();
@@ -58,17 +58,15 @@ void Print_Membrane_Switch_Input_Motion() {
         }
         if(!Stop_Key_X){
           Serial.println(F("Stop key is pressed"));
-          Menu_Complete = true;
+          Menu_Complete_Motion = true;
           lcd.clear();
           lcd.setCursor(0,0);
           lcd.print("Exit Motion");
           delay(1000);
           lcd.clear();          
           Menu_Mode_Selection = 0;
-          Print_Membrane_Switch_Input_Settings();
           }
       }
-    //Activate_Menu_Option_Motion();
     }
 
     
@@ -118,8 +116,8 @@ void Activate_Menu_Option_Motion() {
        lcd.setCursor(0,1);
        lcd.print(F("  RH_PWM: "));
        lcd.print(PWM_MaxSpeed_RH);
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_Motion = false;
+       while (Menu_Complete_Motion == false) {
              Read_Membrane_Keys();
              delay(100);
              //Enter Code Here to Cycle until stop key is pressed.
@@ -127,7 +125,7 @@ void Activate_Menu_Option_Motion() {
              
              if (Set == 2) { 
                Serial.println(F("Settings Saved"));
-               Menu_Complete = true;
+               Menu_Complete_Motion = true;
                lcd.clear();
                lcd.setCursor(0,0);
                lcd.print(F("Wheel PWM"));
@@ -222,14 +220,14 @@ void Activate_Menu_Option_Motion() {
        lcd.print(PWM_Blade_Speed);
        Serial.print(F("Blade PWM:"));
        Serial.println(PWM_Blade_Speed);
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_Motion = false;
+       while (Menu_Complete_Motion == false) {
              Read_Membrane_Keys();
              delay(100);
              //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
              Serial.println(F("Settings Saved"));
-             Menu_Complete = true;
+             Menu_Complete_Motion = true;
              lcd.clear();
              lcd.setCursor(0,0);
              lcd.print(F("Blade PWM:"));
@@ -284,14 +282,14 @@ void Activate_Menu_Option_Motion() {
        if (Cutting_Blades_Activate == 1) lcd.print(F("ON "));
        if (Cutting_Blades_Activate == 0) lcd.print(F("OFF"));
        
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_Motion = false;
+       while (Menu_Complete_Motion == false) {
           Read_Membrane_Keys();
           delay(100);
           //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
                Serial.println(F("Cutting Blades ON/OFF Settings Saved"));
-               Menu_Complete = true;
+               Menu_Complete_Motion = true;
                lcd.clear();
                lcd.setCursor(0,0);
                lcd.print(F("Cutting Blades"));
@@ -348,8 +346,8 @@ void Activate_Menu_Option_Motion() {
        lcd.setCursor(0,1);
        lcd.print(F("  Max/ms:"));
        lcd.print(Mower_Turn_Delay_Max);
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_Motion = false;
+       while (Menu_Complete_Motion == false) {
              Read_Membrane_Keys();
              delay(100);
              //Enter Code Here to Cycle until stop key is pressed.
@@ -357,7 +355,7 @@ void Activate_Menu_Option_Motion() {
              
              if (Set == 2) { 
                Serial.println(F("Settings Saved"));
-               Menu_Complete = true;
+               Menu_Complete_Motion = true;
                lcd.clear();
                lcd.setCursor(0,0);
                lcd.print(F("Min Max Turn"));
@@ -470,14 +468,14 @@ void Activate_Menu_Option_Motion() {
        lcd.print(Mower_Reverse_Delay);
        Serial.print(F("Mower Reverse Time /ms:"));
        Serial.println(Mower_Reverse_Delay);
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_Motion = false;
+       while (Menu_Complete_Motion == false) {
              Read_Membrane_Keys();
              delay(100);
              //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
              Serial.println(F("Settings Saved"));
-             Menu_Complete = true;
+             Menu_Complete_Motion = true;
              lcd.clear();
              lcd.setCursor(0,0);
              lcd.print(F("Reverse Time/ms:"));
@@ -527,14 +525,14 @@ void Activate_Menu_Option_Motion() {
        lcd.setCursor(0,1);
        lcd.print(F("Max Loops: "));
        lcd.print(Max_Cycles_Straight);
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_Motion = false;
+       while (Menu_Complete_Motion == false) {
              Read_Membrane_Keys();
              delay(100);
            //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
                Serial.println(F("Settings Saved"));
-               Menu_Complete = true;
+               Menu_Complete_Motion = true;
                lcd.clear();
                lcd.setCursor(0,0);
                lcd.print(F("SAVED"));
@@ -589,14 +587,14 @@ void Activate_Menu_Option_Motion() {
        if (Pattern_Mow == 2) lcd.print(F("Spiral  "));
        if (Pattern_Mow == 0) lcd.print(F("OFF"));
        
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_Motion = false;
+       while (Menu_Complete_Motion == false) {
           Read_Membrane_Keys();
           delay(100);
           //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
                Serial.println(F("Compass Settings Saved"));
-               Menu_Complete = true;
+               Menu_Complete_Motion = true;
                lcd.clear();
                lcd.setCursor(0,0);
                lcd.print("Pattern Saved");
@@ -648,7 +646,6 @@ void Activate_Menu_Option_Motion() {
 
 
 
+if (Menu_Complete_Motion = true) Print_Membrane_Switch_Input_Motion();  
 
- 
-Print_Membrane_Switch_Input_Motion();
 }

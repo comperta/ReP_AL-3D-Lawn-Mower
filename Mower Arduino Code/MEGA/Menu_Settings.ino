@@ -34,12 +34,12 @@ void Print_Membrane_Switch_Input_Settings() {
     
       Serial.println();
       Serial.println(F("Settings Menu Activated"));
-      Menu_Complete = false;                                // Menu complete will return to the normal loop
+      Menu_Complete_Settings = false;                                // Menu complete will return to the normal loop
       lcd.clear();
       delay(5);
  
 
-      while (Menu_Complete == false) {                      // holds the program in a loop until a selection has been made in the membrane button menu
+      while (Menu_Complete_Settings == false) {                      // holds the program in a loop until a selection has been made in the membrane button menu
         if (Menu_View == 0) {
           lcd.setCursor(1,0);
           //Print_LCD_Menu_Settings(1);
@@ -52,11 +52,10 @@ void Print_Membrane_Switch_Input_Settings() {
         delay(100);
              
         if(!Start_Key_X){
-          Menu_Complete = true;
+          Menu_Complete_Settings = true;
           Serial.println(F("Start key is pressed"));
           lcd.clear();
           Activate_Menu_Option_Settings();
-          Menu_Complete = true;
           }
         if(!Plus_Key_X) {
           Serial.println(F("+ key is pressed"));
@@ -69,7 +68,7 @@ void Print_Membrane_Switch_Input_Settings() {
         }
         if(!Stop_Key_X){
           Serial.println(F("Stop key is pressed"));
-          Menu_Complete = true;
+          Menu_Complete_Settings = true;
           lcd.clear();
           lcd.setCursor(0,0);
           lcd.print("Exit Settings");
@@ -115,7 +114,7 @@ void Activate_Menu_Option_Settings() {
         delay(1000);
         lcd.clear();
         Print_Membrane_Switch_Input_Alarms();
-        //Menu_Mode_Selection = -1;      // skips the re-writing of the menu
+        Menu_Mode_Selection = -1;      // skips the re-writing of the menu
         }
 
 
@@ -127,7 +126,6 @@ void Activate_Menu_Option_Settings() {
         delay(1000);
         lcd.clear();
         Print_Membrane_Switch_Input_Sensors();
-        //Menu_Mode_Selection = -1;      // skips the re-writing of the menu
         }
 
 
@@ -139,7 +137,6 @@ void Activate_Menu_Option_Settings() {
         delay(1000);
         lcd.clear();
         Print_Membrane_Switch_Input_Motion();
-        //Menu_Mode_Selection = -1;      // skips the re-writing of the menu
         }
 
   
@@ -234,5 +231,6 @@ void Activate_Menu_Option_Settings() {
                }
        }
      }
-     if (Menu_Mode_Selection == 0) Print_Membrane_Switch_Input_Settings();
+
+  Print_Membrane_Switch_Input_Settings();
   }

@@ -19,17 +19,17 @@ void Print_LCD_Menu_NAVI(byte LCD_Menu_NAVI) {
 
 void Print_Membrane_Switch_Input_NAVI() {
      Read_Membrane_Keys();
-     Menu_Complete = 1;
+     Menu_Complete_NAVI = 1;
      Menu_Mode_Selection = 0;
      Menu_View = 0;
 
       Serial.println();
       Serial.println(F("NAVI Menu Activated"));
-      Menu_Complete = false;                                // Menu complete will return to the normal loop
+      Menu_Complete_NAVI = false;                                // Menu complete will return to the normal loop
       lcd.clear();
       delay(5);
       
-      while (Menu_Complete == false) {                      // holds the program in a loop until a selection has been made in the membrane button menu
+      while (Menu_Complete_NAVI == false) {                      // holds the program in a loop until a selection has been made in the membrane button menu
         if (Menu_View == 0) {
           lcd.setCursor(1,0);
           Print_LCD_Menu_NAVI(1);
@@ -41,7 +41,7 @@ void Print_Membrane_Switch_Input_NAVI() {
         delay(100);
              
         if(!Start_Key_X){
-          Menu_Complete = true;
+          Menu_Complete_NAVI = true;
           Serial.println(F("Start key is pressed"));
           Activate_Menu_Option_NAVI();
           lcd.clear();
@@ -58,17 +58,15 @@ void Print_Membrane_Switch_Input_NAVI() {
         }
         if(!Stop_Key_X){
           Serial.println(F("Stop key is pressed"));
-          Menu_Complete = true;
+          Menu_Complete_NAVI = true;
           lcd.clear();
           lcd.setCursor(0,0);
           lcd.print("Exit NAVI");
           delay(1000);
           lcd.clear();          
           Menu_Mode_Selection = 0;
-          Print_Membrane_Switch_Input_Settings();
           }
       }
-    //Activate_Menu_Option_NAVI();
     }
 
     
@@ -114,14 +112,14 @@ void Activate_Menu_Option_NAVI() {
        if (Compass_Activate == 1) lcd.print(F("ON "));
        if (Compass_Activate == 0) lcd.print(F("OFF"));
        
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_NAVI = false;
+       while (Menu_Complete_NAVI == false) {
           Read_Membrane_Keys();
           delay(100);
           //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
                Serial.println(F("Compass Settings Saved"));
-               Menu_Complete = true;
+               Menu_Complete_NAVI = true;
                lcd.clear();
                lcd.setCursor(0,0);
                lcd.print(F("Compass Saved"));
@@ -168,14 +166,14 @@ void Activate_Menu_Option_NAVI() {
        lcd.print(Home_Wire_Compass_Heading);
        Serial.print(F("Compass Home Degrees:"));
        Serial.println(Home_Wire_Compass_Heading);
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_NAVI = false;
+       while (Menu_Complete_NAVI == false) {
              Read_Membrane_Keys();
              delay(100);
              //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
              Serial.println(F("Settings Saved"));
-             Menu_Complete = true;
+             Menu_Complete_NAVI = true;
              lcd.clear();
              lcd.setCursor(0,0);
              lcd.print(F("Compass Home Degrees:"));
@@ -229,14 +227,14 @@ void Activate_Menu_Option_NAVI() {
        if (Compass_Heading_Hold_Enabled == 1) lcd.print(F("ON "));
        if (Compass_Heading_Hold_Enabled == 0) lcd.print(F("OFF"));
        
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_NAVI = false;
+       while (Menu_Complete_NAVI == false) {
           Read_Membrane_Keys();
           delay(100);
           //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
                Serial.println(F("Heading Hold Settings Saved"));
-               Menu_Complete = true;
+               Menu_Complete_NAVI = true;
                lcd.clear();
                lcd.setCursor(0,0);
                lcd.print(F("H-Hold Saved"));
@@ -284,14 +282,14 @@ void Activate_Menu_Option_NAVI() {
        lcd.print(CPower);
        Serial.print(F("Compass PID P = :"));
        Serial.println(CPower);
-       Menu_Complete = false;
-       while (Menu_Complete == false) {
+       Menu_Complete_NAVI = false;
+       while (Menu_Complete_NAVI == false) {
              Read_Membrane_Keys();
              delay(100);
              //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
              Serial.println(F("Settings Saved"));
-             Menu_Complete = true;
+             Menu_Complete_NAVI = true;
              lcd.clear();
              lcd.setCursor(0,0);
              lcd.print("Compass P : ");
@@ -329,5 +327,5 @@ void Activate_Menu_Option_NAVI() {
              
              }
      }
-Print_Membrane_Switch_Input_NAVI();
+if (Menu_Complete_NAVI = true) Print_Membrane_Switch_Input_NAVI();   
 }

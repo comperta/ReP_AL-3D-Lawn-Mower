@@ -8,25 +8,33 @@ Serial.println("*** EEPROM Settings ***");
   Alarm_1_Saved_EEPROM = EEPROM.read(1);
   
   if (Alarm_1_Saved_EEPROM == 1) {
-    Alarm_1_Hour = EEPROM.read(2);
-    Alarm_1_Minute = EEPROM.read(3);
-    Alarm_1_ON = EEPROM.read(4);
+    Alarm_1_Hour    = EEPROM.read(2);
+    Alarm_1_Minute  = EEPROM.read(3);
+    Alarm_1_ON      = EEPROM.read(4);
+    Alarm_1_Action  = EEPROM.read(87);
     Serial.print(F("Alarm 1 time from EEPROM "));
     Serial.print(Alarm_1_Hour);
     Serial.print(F(":"));
     if (Alarm_1_Minute < 10) Serial.print("0");
-    Serial.print(Alarm_1_Minute);
+    Serial.println(Alarm_1_Minute);
+    Serial.print("Alarm Action 1 =");
     if (Alarm_1_ON == 0) Serial.println(" | Alarm 1 OFF");
     if (Alarm_1_ON == 1) Serial.println(" | Alarm 1 Active");
+    if (Alarm_1_Action == 1) Serial.println("Exit Zone 1");
+    if (Alarm_1_Action == 2) Serial.println("Exit Zone 2");
+    if (Alarm_1_Action == 3) Serial.println("Mow the Line");
+    if (Alarm_1_Action == 4) Serial.println("Quick Start");
+    if (Alarm_1_Action == 5) Serial.println("Custom");
     }
 
     
   Alarm_2_Saved_EEPROM = EEPROM.read(5);
   
   if (Alarm_2_Saved_EEPROM == 1) {
-    Alarm_2_Hour = EEPROM.read(6);
-    Alarm_2_Minute = EEPROM.read(7);
-    Alarm_2_ON = EEPROM.read(8);
+    Alarm_2_Hour    = EEPROM.read(6);
+    Alarm_2_Minute  = EEPROM.read(7);
+    Alarm_2_ON      = EEPROM.read(8);
+    Alarm_2_Action  = EEPROM.read(88);
     Serial.print(F("Alarm 2 time from EEPROM "));
     Serial.print(Alarm_2_Hour);
     Serial.print(F(":"));
@@ -34,14 +42,20 @@ Serial.println("*** EEPROM Settings ***");
     Serial.print(Alarm_2_Minute);
     if (Alarm_2_ON == 0) Serial.println(" | Alarm 2 OFF");
     if (Alarm_2_ON == 1) Serial.println(" | Alarm 2 Active");
+    if (Alarm_2_Action == 1) Serial.println("Exit Zone 1");
+    if (Alarm_2_Action == 2) Serial.println("Exit Zone 2");
+    if (Alarm_2_Action == 3) Serial.println("Mow the Line");
+    if (Alarm_2_Action == 4) Serial.println("Quick Start");
+    if (Alarm_2_Action == 5) Serial.println("Custom");
     }
 
   Alarm_3_Saved_EEPROM = EEPROM.read(9);
   
   if (Alarm_3_Saved_EEPROM == 1) {
-    Alarm_3_Hour = EEPROM.read(10);
-    Alarm_3_Minute = EEPROM.read(11);
-    Alarm_3_ON = EEPROM.read(12);
+    Alarm_3_Hour    = EEPROM.read(10);
+    Alarm_3_Minute  = EEPROM.read(11);
+    Alarm_3_ON      = EEPROM.read(12);
+    Alarm_3_Action  = EEPROM.read(89);
     Serial.print(F("Alarm 3 time from EEPROM "));
     Serial.print(Alarm_3_Hour);
     Serial.print(F(":"));
@@ -49,7 +63,14 @@ Serial.println("*** EEPROM Settings ***");
     Serial.print(Alarm_3_Minute);
     if (Alarm_3_ON == 0) Serial.println(" | Alarm 3 OFF");
     if (Alarm_3_ON == 1) Serial.println(" | Alarm 3 Active");
+    if (Alarm_3_Action == 1) Serial.println("Exit Zone 1");
+    if (Alarm_3_Action == 2) Serial.println("Exit Zone 2");
+    if (Alarm_3_Action == 3) Serial.println("Mow the Line");
+    if (Alarm_3_Action == 4) Serial.println("Quick Start");
+    if (Alarm_3_Action == 5) Serial.println("Custom");
     }
+
+    
 
   PWM_LEFT_EEPROM = EEPROM.read(13);
   if (PWM_LEFT_EEPROM == 1) {
@@ -400,6 +421,9 @@ void Clear_EERPOM() {
   EEPROM.write(81,0);     // WIFI ON/OFF
   EEPROM.write(83,0);     // Cutting Blades ON/OFF
   EEPROM.write(85,0);     // Batt sensitivity;
+  EEPROM.write(87,0);     // Alarm Actions 1-3
+  EEPROM.write(88,0);
+  EEPROM.write(89,0);
   Serial.println(F("All EEPROM Settings Cleared"));
   delay(1000);
   
