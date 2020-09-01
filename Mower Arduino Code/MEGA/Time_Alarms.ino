@@ -19,7 +19,7 @@ void DisplayTime()   {
   }
 
 void Print_Time_On_Serial() {
-      Serial.print("Time:");
+      Serial.print(F("Time:"));
       Time t = rtc.time();
       Serial.print(t.hr);
       Serial.print(":");
@@ -39,12 +39,20 @@ void Activate_Alarms() {
   if (Alarm_1_ON == 1) {  
      if ((t.hr == Alarm_1_Hour) && (t.min == Alarm_1_Minute)) {
        Serial.println("");
-       Serial.println("ALARM 1");
+       Serial.println(F("ALARM 1"));
        delay(2000);
        // Insert action for Alarm 1 Here
-       Exit_Zone = 1;
-       Track_Wire_Itterations = Track_Wire_Zone_1_Cycles;
-       Manouver_Exit_To_Zone_X();
+       if (Alarm_1_Action == 1) {
+        Exit_Zone = 1;
+         Track_Wire_Itterations = Track_Wire_Zone_1_Cycles;
+         Manouver_Exit_To_Zone_X();
+         }
+       if (Alarm_1_Action == 2) {
+        Exit_Zone = 2;
+         Track_Wire_Itterations = Track_Wire_Zone_2_Cycles;
+         Manouver_Exit_To_Zone_X();
+         }
+       
        }
      }
  
@@ -53,8 +61,14 @@ void Activate_Alarms() {
   if (Alarm_2_ON == 1) {  
      if ((t.hr == Alarm_2_Hour) && (t.min == Alarm_2_Minute)) {
        Serial.println("");
-       Serial.println("ALARM 2");
+       Serial.println(F("ALARM 2"));
        delay(2000);
+
+       if (Alarm_2_Action == 1) {
+        Exit_Zone = 1;
+         Track_Wire_Itterations = Track_Wire_Zone_1_Cycles;
+         Manouver_Exit_To_Zone_X();
+         }
        //Insert action for Alarm 2 Here
        //
        //
@@ -66,8 +80,15 @@ void Activate_Alarms() {
   if (Alarm_3_ON == 1) {  
      if ((t.hr == Alarm_3_Hour) && (t.min == Alarm_3_Minute)) {
        Serial.println("");
-       Serial.println("ALARM 3");
+       Serial.println(F("ALARM 3"));
        delay(2000);
+       if (Alarm_3_Action == 1) {
+        Exit_Zone = 1;
+         Track_Wire_Itterations = Track_Wire_Zone_1_Cycles;
+         Manouver_Exit_To_Zone_X();
+         }
+
+ 
        //Insert action for Alarm 3 Here
        //
        //
@@ -83,7 +104,7 @@ void Check_Timed_Mow() {
   if (Alarm_Timed_Mow_ON == 1) {  
       Time t = rtc.time();
      if ((t.hr == Alarm_Timed_Mow_Hour) && (t.min == Alarm_Timed_Mow_Minute)) {
-       Serial.println("Timed Mow Complete");
+       Serial.println(F("Timed Mow Complete"));
        delay(2000);
        //Insert action for Timed Mow Alarm Here
          if (Use_Charging_Station == 1) Manouver_Go_To_Charging_Station();                       // Stops the mowing and sends the mower back to the charging station via the permieter wire
@@ -98,7 +119,7 @@ void Display_Next_Alarm()  {
   //Print_Day();
   
   if (Alarm_1_ON == 1 ) {
-  Serial.print("|Alarm 1:");
+  Serial.print(F("|Alarm 1:"));
   Serial.print(Alarm_1_Hour);
   Serial.print(F(":"));
   if (Alarm_1_Minute < 10) Serial.print ("0");
@@ -108,7 +129,7 @@ void Display_Next_Alarm()  {
   if (Alarm_1_ON == 0) Serial.print("|Alarm 1 OFF");
  
   if (Alarm_2_ON == 1) {
-  Serial.print("|Alarm 2:");
+  Serial.print(F("|Alarm 2:"));
   Serial.print(Alarm_2_Hour);
   Serial.print(F(":"));
   if (Alarm_2_Minute < 10) Serial.print ("0");
@@ -118,7 +139,7 @@ void Display_Next_Alarm()  {
   if (Alarm_2_ON == 0) Serial.print("|Alarm 2 OFF");
   
   if (Alarm_3_ON == 1) {
-  Serial.print("|Alarm 3:");
+  Serial.print(F("|Alarm 3:"));
   Serial.print(Alarm_3_Hour);
   Serial.print(F(":"));
   if (Alarm_3_Minute < 10) Serial.print ("0");
@@ -134,7 +155,7 @@ void Set_Time_On_RTC(){
    // Set_Time to 1 in the setting menu to set time.  Load the sketch then immediatley Set_Time = 0 and reload the sketch.
         rtc.writeProtect(false);
         rtc.halt(false);
-        Time t(2019, 07, 12, 15, 8, 00, Time::kFriday);            // Year XXXX, Month XX, Day XX, Hour XX, Minute XX, Second, kXYZday
+        Time t(2019, 9, 14, 17, 03, 00, Time::kSaturday);            // Year XXXX, Month XX, Day XX, Hour XX, Minute XX, Second, kXYZday
         rtc.time(t);    
         delay(10);
    }
