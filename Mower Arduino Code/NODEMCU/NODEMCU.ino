@@ -5,6 +5,8 @@
 #include <ESP8266WiFi.h>
 #include <BlynkSimpleEsp8266.h>
 #include <SoftwareSerial.h>
+#include <PubSubClient.h> // for MQTT
+#include "config.h" //Config file for credentials
 
 SoftwareSerial NodeMCU(D2,D3);   //RXD2 TXD3
 
@@ -17,12 +19,16 @@ SoftwareSerial NodeMCU(D2,D3);   //RXD2 TXD3
 
 char auth[] = "Blynk Token Number";
 
-// Your WiFi credentials.
-// Set password to "" for open networks.
-char ssid[] = "WIFI NAME";
-char pass[] = "WIFI Password";
+///////////***********MQTT*************////////
+WiFiClient espClient;
+PubSubClient client(espClient);
+int Charge_old = 0;
+int Tracking_old = 0;
+int Mower_Parked_old = 0;
+int Mower_Running_Filter_old = 0;
+int Mower_Docked_Filter_old = 0;
 
-
+///////////***********MQTT*************////////
 int buttonState = 0;
 char  Version[16];
 
@@ -81,16 +87,21 @@ void myTimerEvent()  {
 
 void setup()
 {
-  Serial.begin(9600);
+
+  //Serial.begin(9600);
   NodeMCU.begin(9600);
-  Serial.println();
-  Serial.println("Setting up NODEMCU........");
-  Serial.println("");
+  #ifdef DEBUG
+    Serial.begin(9600);
+    Serial.println();
+    Serial.println("debug mode on");
+    Serial.println("Setting up NODEMCU........");
+    Serial.println("");
+  #endif
   pinMode(D2,INPUT);
   pinMode(D3,OUTPUT);
   digitalWrite(LED, HIGH);                          // Turn off LED Light
   WIFI_Connect();                                   // Connect to the WIFI
-  Clear_APP();
+  if (app == "Blynk") Clear_APP();
   lcd.clear();
   pinMode(LED, OUTPUT);
 
@@ -103,64 +114,117 @@ void setup()
 //***********************************
 
 
-void WIFI_Connect() {
-  
-  int mytimeout = millis() / 1000;
-  Serial.println();
-  Serial.println("*********************************************");
-  Blynk.begin(auth, ssid, pass);
-  
-  
-  while (Blynk.connected() != WL_CONNECTED) {
-    delay(500);
-      if((millis() / 1000) > mytimeout + 3){                      // try for less than 4 seconds to connect to WiFi router
-      break;
+void WIFI_Connect() 
+{
+  if(app == "Blink") {
+    int mytimeout = millis() / 1000;
+    #ifdef DEBUG
+      Serial.println();
+      Serial.println("*********************************************");
+    #endif
+    Blynk.begin(auth, SSID, PASSWORD);
+    
+    
+    while (Blynk.connected() != WL_CONNECTED) {
+      delay(500);
+        if((millis() / 1000) > mytimeout + 3){                      // try for less than 4 seconds to connect to WiFi router
+        break;
+      }
     }
-  }
-  
-  if(!Blynk.connected()) {
-    digitalWrite(LED, HIGH);
-    Serial.println("NODEMCU Disconnected");
-    Serial.println("Reconnecting . . . . . . ");
-    WIFI_Connect();
+    
+    if(!Blynk.connected()) {
+      digitalWrite(LED, HIGH);
+      #ifdef DEBUG
+        Serial.println("NODEMCU Disconnected");
+        Serial.println("Reconnecting . . . . . . ");
+      #endif
+      WIFI_Connect();
 
-    }
+      }
+    else {
+      digitalWrite(LED, LOW);
+      #ifdef DEBUG
+        Serial.println("Connected. . . . . .");
+      #endif 
+      // Setup a function to be called every second
+      timer.setInterval(1000L, myTimerEvent);
+      }
+   }
   else {
-    digitalWrite(LED, LOW);
-    Serial.println("Connected. . . . . .");
-    // Setup a function to be called every second
-    timer.setInterval(1000L, myTimerEvent);
+      delay(10);
+      // We start by connecting to a WiFi network
+      #ifdef DEBUG
+        Serial.println();
+        Serial.print("Connecting to ");
+        Serial.println(SSID);
+      #endif
+      WiFi.begin(SSID, PASSWORD);
+
+      while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        #ifdef DEBUG
+          Serial.print(".");
+        #endif
+      }
+
+      #ifdef DEBUG
+        Serial.println("");
+        Serial.println("WiFi connected");
+        Serial.println("IP address: ");
+        Serial.println(WiFi.localIP());
+      #endif
+      client.setServer(MQTT_SERVER , 1883);
+      client.setCallback(callback);
     }
-  }
 
-
-
-
-
-
+     
+   }
 
 void loop()  {
 
   loopstatus = loopstatus + 1 ;
   RX_Data_Recieved = 0;                         // resets the data received bool 
-  
-  if(!Blynk.connected()) {
-    Blynk.run();
-    timer.run();  
-    digitalWrite(LED, HIGH);
-    Serial.println("------------------------");
-    Serial.println("NODEMCU Disconnected");
-    Serial.println("Reconnecting ... ");
-    WIFI_Connect() ;
+  if(app == "Blynk") {
+    if(!Blynk.connected()) {
+      Blynk.run();
+      timer.run();  
+      digitalWrite(LED, HIGH);
+      #ifdef DEBUG
+         Serial.println("------------------------");
+         Serial.println("NODEMCU Disconnected");
+         Serial.println("Reconnecting ... ");
+      #endif
+      WIFI_Connect() ;
+      }
+    else {
+      Blynk.run();
+      timer.run();  
+      digitalWrite(LED, LOW);         //LED is inverted on a MODEMCU...
+      Receive_All_From_MEGA();
+      Update_Blynk_App_With_Status();
+      #ifdef DEBUG
+        Serial.println("");     // new line serial monitor
+      #endif
     }
-  else {
-    Blynk.run();
-    timer.run();  
-    digitalWrite(LED, LOW);         //LED is inverted on a MODEMCU...
-    Receive_All_From_MEGA();
-    Update_Blynk_App_With_Status();
-    Serial.println("");     // new line serial monitor
   }
-
+  else {
+    if (!client.connected()) {
+         digitalWrite(LED, HIGH);
+        #ifdef DEBUG
+          Serial.println("------------------------");
+          Serial.println("NODEMCU MQTT Disconnected");
+          Serial.println("Reconnecting ... ");
+        #endif
+        reconnect();
+        Clear_MQTT();
+      }
+    else {
+      client.loop();
+      digitalWrite(LED, LOW);         //LED is inverted on a MODEMCU...
+      Receive_All_From_MEGA();
+      Update_MQTT_With_Status();
+      //Serial.println("");     // new line serial monitor
+      }
+  } 
 
 }

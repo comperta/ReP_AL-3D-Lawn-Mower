@@ -35,13 +35,12 @@ void Get_Compass_Reading() {
         
           Compass_Heading_Degrees = Heading * 180 / M_PI;                 // Convert to degrees
 
-          Serial.print(F("Comp°:"));
-          Serial.print(Compass_Heading_Degrees);
-          Serial.print("|");
+          #ifdef DEBUG
+            Serial.print(F("Comp°:"));
+            Serial.print(Compass_Heading_Degrees);
+            Serial.print("|");
+          #endif
           delay(5);
-          if (LCD_Screen_Keypad_Menu == 1) lcd.setCursor(7, 0);
-          if (LCD_Screen_Keypad_Menu == 1) lcd.print(" ");
-          delay(100);
           }
 }
 
@@ -63,7 +62,9 @@ void Get_DFRobot_QMC5883_Reading() {
 
 void Get_Manuel_QMC5883_Reading() {
   
+  #ifdef DEBUG
   Serial.println(F("Use DF Robot and GY282"));
+  #endif
 
 }
 
@@ -82,11 +83,8 @@ void Get_QMC5883L_Reading() {
 void Compass_Turn_Mower_To_Home_Direction() {
     //Stop the motors.
     Motor_Action_Stop_Motors;
-    delay(2000);
-    Print_LCD_Compass_Home();
-    delay(1000);
+    delay(2000);                            
     Compass_Target = Home_Wire_Compass_Heading;
-    lcd.clear();
     // Reverse the mower a little
     SetPins_ToGoBackwards();
     Motor_Action_Go_Full_Speed();
@@ -107,8 +105,6 @@ void Compass_Turn_Mower_To_Home_Direction() {
     Motor_Action_Stop_Motors();
     Get_Compass_Reading();
     delay(500);
-    lcd.clear();
-    lcd.print("Compass Set");
     Motor_Action_Stop_Motors();
     Get_Compass_Reading();
     delay(2000);
@@ -118,19 +114,17 @@ void Compass_Turn_Mower_To_Home_Direction() {
 
 void Turn_To_Compass_Heading() {
 
-    Serial.println("");
-    Serial.println("- - - - - - - - -");
-    Serial.println(F("Compass Home 2 Activated"));
-    delay(1000); 
-    
-    // Print info to LCD
-    lcd.setCursor(0,0);
-    lcd.print("Target: ");
-    lcd.print(Compass_Target);
-
+    #ifdef DEBUG
+      Serial.println("");
+      Serial.println("- - - - - - - - -");
+      Serial.println(F("Compass Home 2 Activated"));
+      delay(1000); 
+    #endif
     // Print to Serial Monitor
-    Serial.print("Compass Target : ");
-    Serial.println(Compass_Target);   
+    #ifdef DEBUG
+      Serial.print("Compass Target : ");
+      Serial.println(Compass_Target);  
+    #endif 
 
     // Sets the boundaries for the error of compass accurcy required.
     Heading_Lower_Limit_Compass = Compass_Target - 5;
@@ -141,19 +135,20 @@ void Turn_To_Compass_Heading() {
     int Bad_Reading = 0;
 
     if (Compass_Target < 180) {
-    
-    Serial.println("Compass Target < 180 logic used");
+
     float Limit = Compass_Target + 180;
-    Serial.print("Left Turn Limit : ");
+
+    #ifdef DEBUG
+    Serial.println("Compass Target < 180 logic used");
+        Serial.print("Left Turn Limit : ");
     Serial.print(Compass_Target);
     Serial.print(" to ");
     Serial.println(Limit);
-
     Serial.print("Right Turn Limit : ");
     Serial.print(Limit);
     Serial.print(" to 360° & 0 to ");
     Serial.println(Compass_Target);
-
+    #endif
     Get_Compass_Reading();
     delay(500);
     Get_Compass_Reading();
@@ -167,6 +162,7 @@ void Turn_To_Compass_Heading() {
       // Double check if the compass reading retunred is plausable.
       if (Attemps_Compass_Turn > 5) {
         if (Compass_Heading_Degrees - Compass_Last > 50) {
+          #ifdef DEBUG
           Serial.print("Bad Compass Reading ");
           Serial.print("Compass Heading Degrees = ");
           Serial.print(Compass_Heading_Degrees);
@@ -174,38 +170,36 @@ void Turn_To_Compass_Heading() {
           Serial.print(Compass_Last);
           Serial.print("  Degrees - Last = ");
           Serial.println(Compass_Heading_Degrees - Compass_Last);
-          
+          #endif
           Bad_Reading = Bad_Reading + 1;
-          lcd.setCursor(15,1);
-          lcd.print("x");
           Get_Compass_Reading;
           delay(100);
-          }
-        else {
-          lcd.setCursor(15,1);
-          lcd.print("o");  
-        }
-        
+          }        
       }
       Compass_Last = Compass_Heading_Degrees;    // sotres the last good compass reading
 
 
       
       delay(100);
+      #ifdef DEBUG
       Serial.print("Compass Heading : ");
       Serial.print(Compass_Heading_Degrees);
       Serial.print("|");
-      
+      #endif
       if ( (Compass_Heading_Degrees  > Compass_Target) && (Compass_Heading_Degrees < Limit) )  {
           SetPins_ToTurnLeft(); 
-          Serial.print(F("Spin Left"));
-          Serial.print(F("|"));  
+          #ifdef DEBUG
+            Serial.print(F("Spin Left"));
+            Serial.print(F("|"));
+          #endif  
           delay(100);
           }
       if ( ((Compass_Heading_Degrees > Limit) && (Compass_Heading_Degrees < 360)) || ( (Compass_Heading_Degrees > 0) && (Compass_Heading_Degrees < Compass_Target)) ) {
           SetPins_ToTurnRight(); 
-          Serial.print(F("Spin Right"));
-          Serial.print(F("|")); 
+          #ifdef DEBUG
+            Serial.print(F("Spin Right"));
+            Serial.print(F("|")); 
+          #endif
           delay(100); 
           }
 
@@ -217,24 +211,25 @@ void Turn_To_Compass_Heading() {
       Motor_Action_Turn_Speed();                                       // Sets the speed of the turning motion
       delay(100);
       Get_Compass_Reading;
-      Motor_Action_Stop_Motors();
-      lcd.setCursor(0,1);
-      lcd.print(Compass_Heading_Degrees);
-    
+      Motor_Action_Stop_Motors();   
       
       Attemps_Compass_Turn = Attemps_Compass_Turn + 1;
+      #ifdef DEBUG
       Serial.print("Atempts:");
       Serial.print(Attemps_Compass_Turn);
       Serial.print("|");
       Serial.println("");
+      #endif
     }
     }
 
 if (Compass_Target >= 180) {
     
+    float Limit = Compass_Target - 180;
+    #ifdef DEBUG
     Serial.println("Compass Target > 180 logic used");
     
-    float Limit = Compass_Target - 180;
+    
 
     Serial.print("Left Turn Limit : ");
     Serial.print(Compass_Target);
@@ -245,7 +240,7 @@ if (Compass_Target >= 180) {
     Serial.print(Compass_Target);
     Serial.print(" to ");
     Serial.println(Limit);
-
+    #endif
     while ((Compass_Heading_Degrees < Heading_Lower_Limit_Compass) || (Compass_Heading_Degrees > Heading_Upper_Limit_Compass) && (Attemps_Compass_Turn < 40) && (Bad_Reading < 5))  { 
 
       delay(200);
@@ -254,38 +249,39 @@ if (Compass_Target >= 180) {
       // Double check if the compass reading returned is plausable.
       if (Attemps_Compass_Turn > 5) {
         if (Compass_Heading_Degrees - Compass_Last > 50){
+          #ifdef DEBUG
           Serial.println("Bad Compass Reading");
+          #endif
           Bad_Reading = Bad_Reading + 1;
-          lcd.setCursor(15,1);
-          lcd.print("x");
           Get_Compass_Reading;
           delay(100);
-          }
-        else {
-          lcd.setCursor(15,1);
-          lcd.print("o");  
-        }
-        
+          }        
       }
       Compass_Last = Compass_Heading_Degrees;    // sotres the last good compass reading
 
 
       
       delay(100);
-      Serial.print("Compass Heading : ");
-      Serial.print(Compass_Heading_Degrees);
-      Serial.print("|");
+      #ifdef DEBUG
+        Serial.print("Compass Heading : ");
+        Serial.print(Compass_Heading_Degrees);
+        Serial.print("|");
+      #endif
 
       if ( ((Compass_Heading_Degrees > Compass_Target) && (Compass_Heading_Degrees < 360)) || ( (Compass_Heading_Degrees > 0) && (Compass_Heading_Degrees < Limit)) ) {
-          SetPins_ToTurnLeft(); 
-          Serial.print(F("Spin Left"));
-          Serial.print(F("|")); 
+          SetPins_ToTurnLeft();
+          #ifdef DEBUG 
+            Serial.print(F("Spin Left"));
+            Serial.print(F("|")); 
+          #endif
           delay(100); 
           }
       if ( (Compass_Heading_Degrees  > Limit) && (Compass_Heading_Degrees < Compass_Target) )  {
           SetPins_ToTurnRight(); 
-          Serial.print(F("Spin Right"));
-          Serial.print(F("|"));  
+          #ifdef DEBUG
+            Serial.print(F("Spin Right"));
+            Serial.print(F("|"));  
+          #endif
           delay(100);
           }
 
@@ -299,18 +295,16 @@ if (Compass_Target >= 180) {
       Motor_Action_Stop_Motors();
 
       Attemps_Compass_Turn = Attemps_Compass_Turn + 1;
-      Serial.print("Atempts:");
-      Serial.print(Attemps_Compass_Turn);
-      Serial.print("|");
-      Serial.println("");
+      #ifdef DEBUG
+        Serial.print("Atempts:");
+        Serial.print(Attemps_Compass_Turn);
+        Serial.print("|");
+        Serial.println("");
+      #endif
      }
     }   
 
  if (Bad_Reading > 5)  {
-    lcd.clear();
-    lcd.print("Bad Compass Readings");
-    lcd.setCursor(0,1);
-    lcd.print("Restarting");
     delay(1000);
     SetPins_ToTurnLeft();                                     // Calls the motor function turn Left
     Motor_Action_Turn_Speed();                                       // Sets the speed of the turning motion
@@ -330,28 +324,22 @@ if (Compass_Target >= 180) {
 }
 
 
-void Display_Compass_Current_Heading_on_LCD() {
-      lcd.setCursor(5, 1);
-      lcd.print("    ");
-      lcd.print(Compass_Heading_Degrees);
-      delay(10);
-}
-
-
-
 void Calculate_Compass_Wheel_Compensation() {
 
   float Compass_Error = Compass_Heading_Degrees - Heading_Lock;        // Calculates the error in compass heading from the saved lock heading
   
   if (Compass_Error > 180) Compass_Error = Compass_Error * - 1 ;
   if (Compass_Error < -180) Compass_Error = Compass_Error * - 1 ;
-  Serial.print(F("C_Err:"));
-  Serial.print(Compass_Error);
-  Serial.print(F("|"));
- 
+  #ifdef DEBUG
+    Serial.print(F("C_Err:"));
+    Serial.print(Compass_Error);
+    Serial.print(F("|"));
+  #endif
+
   if (Compass_Error < 0) {                                             // Steer left
-     Serial.print(F("SR|"));
-    
+      #ifdef DEBUG
+        Serial.print(F("SR|"));
+      #endif
     
     // With no adjustment of wheel speed according to MAG Level    
     if (MAG_Speed_Adjustment == 0) {
@@ -382,7 +370,9 @@ void Calculate_Compass_Wheel_Compensation() {
 
     
   if (Compass_Error >= 0) {  
-    Serial.print(F("SL|"));
+    #ifdef DEBUG
+      Serial.print(F("SL|"));
+    #endif
 
     // With no adjustment of wheel speed according to MAG Level
     if (MAG_Speed_Adjustment == 0) {

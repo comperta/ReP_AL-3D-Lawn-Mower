@@ -5,6 +5,7 @@
 // Instructions on how to do this are available on my webpage
 // www.repalmakershop.com
 
+#include "config.h" //Config file for credentials
 
 //Libraries for Perimeter Wire Receiver
 #include <Arduino.h>
@@ -31,11 +32,6 @@ byte bcdToDec(byte val)
 }
 
 
-
-//Libraries for ic2 Liquid Crystal
-#include <LiquidCrystal_I2C.h>
-LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // 330 Mower
-//LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // LAM Test
 
 
 //Libraries for the Mowing Calendar Function
@@ -378,7 +374,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   The following setup parameters will setup the mower for your garden
   Turn on or off the settings to defien how you like the mower to behave.
   
-  Settings marked with EEPROM can be adjusted using the mower LCD menu.  Once changes and saved
+  Settings marked with EEPROM can be adjusted using the mower TFT menu.  Once changes and saved
   the EEPROM settings will override the settings in this menu.  
   
   To clear these settings you need to clear the EEPROM
@@ -390,7 +386,6 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   char Version[16] = "V8.8";
 
   bool TFT_Screen_Menu            = 1;                          // Set to 1 to use TFT  and 0 when not used
-  bool LCD_Screen_Keypad_Menu     = 0;                          // Set to 1 to use LCD  and 0 when not used
   bool PCB                        = 0;                          // USE Printed Circuit Board Relay
 
   bool Cutting_Blades_Activate    = 1;     // EEPROM            // Activates the cutting blades and disc in the code
@@ -560,14 +555,16 @@ void setup() {
   if (WIFI_Enabled == true) Serial2.begin(9600);					// If WIFI is on open Serial port 2 for the NodeMCU communication
   if (TFT_Screen_Menu == 1) Serial3.begin(9600);          // 1200 before
   Wire.begin();                                           // start the i2c interface
-  Serial.println(" ");
-  Serial.println(" ");  
-  Serial.print(F("ReP_AL Robot :"));
-  Serial.println(Version);  
-  Serial.println(F("==================="));
-  Serial.println("");
-  Serial.println(F("Starting Mower Setup"));
-  Serial.println(F("==================="));
+  #ifdef DEBUG
+    Serial.println(" ");
+    Serial.println(" ");  
+    Serial.print(F("ReP_AL Robot :"));
+    Serial.println(Version);  
+    Serial.println(F("==================="));
+    Serial.println("");
+    Serial.println(F("Starting Mower Setup"));
+    Serial.println(F("==================="));
+  #endif
   Load_EEPROM_Saved_Data();
 
 Compass_Activate = 1;
@@ -576,16 +573,19 @@ Compass_Activate = 1;
 
   // If the manuel set time is switched on
   if (Set_Time == 1 ) {
-    Serial.print(F("Setting Time"));
+    #ifdef DEBUG
+      Serial.print(F("Setting Time"));
+    #endif
     if (PCB == 0) Set_Time_On_DS1302();
     if (PCB == 1) Set_Time_DS3231();
     }
   if (PCB == 0) DisplayTime_DS1302();
   if (PCB == 1) Display_DS3231_Time();
   
-  Serial.println("");
+  #ifdef DEBUG
+    Serial.println("");
+  #endif
   Prepare_Mower_from_Settings();
-  if (LCD_Screen_Keypad_Menu == 1)  Setup_Run_LCD_Intro ();
   if (Compass_Setup_Mode == 1)      Setup_DFRobot_QMC5883_HMC5883L_Compass();   // USes the DFRobot Library
   if (Compass_Setup_Mode == 2)      Setup_Manuel_QMC5883_Compass();             // Uses manual i2C address
   if (Compass_Setup_Mode == 3)      Setup_QMC5883L_Compass();                   // Uses QMC5883L Library
@@ -593,10 +593,8 @@ Compass_Activate = 1;
   delay(100);
   Setup_Relays();
   Setup_Tilt_Tip_Safety();
-  if (LCD_Screen_Keypad_Menu == 1) Setup_Membrane_Buttons();
   Setup_Motor_Pins();
   Setup_ADCMan();
-  Setup_Check_Pattern_Mow();
   if (Bumper_Activate_Frnt == true) Setup_Bumper_Bar();
   }
 
@@ -606,53 +604,42 @@ if (TFT_Screen_Menu == 1)                                 Check_TFT_Serial_Input
 if ((TFT_Screen_Menu == 1) && (TFT_Menu_Command > 1))     Activate_TFT_Menu();        // If TFT Menu has requested an input, TX or RX that input.
 
 // Read the Serial Ports for Data
-Read_Serial1_Nano();                                                                  // Read the Serial data from the nano
-Print_Mower_Status();                                                                 // Update the Serial monitor with the current mower status.
+Read_Serial1_Nano();                                                                  // Read the Serial data from the nano 
+#ifdef DEBUG
+  Print_Mower_Status();                                                                 // Update the Serial monitor with the current mower status.
+#endif
 
 
 // Mower is docked, docking station is enabled and waiting for a command to leave and mow.
-if ((Mower_Docked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_LCD_Volt_Info();                                  // Print the voltage to the LCD screen
-if  (Mower_Docked == 1)                                           Check_if_Charging();
-if ((Mower_Docked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_LCD_Info_Docked();                                // Print information to the LCD screen
-if ((Mower_Docked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_Time_On_LCD(); 
-if ((Mower_Docked == 1) && (LCD_Screen_Keypad_Menu == 1))         Check_Membrane_Switch_Input_Docked();                   // Check the membrane buttons for any input
-if ((Mower_Docked == 1) && (GPS_Enabled == 1))                    Check_GPS_In_Out();                                     // Get the GPS Signal In / Out of Fence                                
+if  (Mower_Docked == 1)                                           Check_if_Charging(); 
+if ((Mower_Docked == 1) && (GPS_Enabled == 1))                    Check_GPS_In_Out();                              
 if (Mower_Docked == 1)                                            TestforBoundaryWire();                                  // Test is the boundary wire is live                                 
 if (Mower_Docked == 1)                                            Manouver_Dock_The_Mower();
-if (Mower_Docked == 1)                                            Print_Time_On_Serial_Monitor();
-if (Mower_Docked == 1)                                            Display_Next_Alarm();
+#ifdef DEBUG
+  if (Mower_Docked == 1)                                            Print_Time_On_Serial_Monitor();
+  if (Mower_Docked == 1)                                            Display_Next_Alarm();
+#endif
 if (Mower_Docked == 1)                                            Activate_Alarms();
 if ((Mower_Docked == 1) && (TFT_Screen_Menu == 1))                Send_Mower_Docked_Data();                               // Send Data to TFT Display
 
 
 // Mower is Parked ready to be started / re-started / or the mower has no docking station enabled.
-if ((Mower_Parked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_LCD_Volt_Info();                                  // Print the voltage to the LCD screen
 if (Mower_Parked == 1)                                            Check_if_Charging();
 if (Mower_Parked == 1)                                            Check_if_Raining_From_Nano ();                          // Checks if the water sensor detects Rain
-if ((Mower_Parked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_LCD_Info_Parked();                                // Print information to the LCD screen
-if ((Mower_Parked == 1) && (LCD_Screen_Keypad_Menu == 1))         Check_Membrane_Switch_Input_Parked();                   // Check the membrane buttons for any input
 if ((Mower_Parked == 1) && (GPS_Enabled == 1))                    Check_GPS_In_Out();
 if (Mower_Parked == 1)                                            TestforBoundaryWire();
 if (Mower_Parked == 1)                                            Manouver_Park_The_Mower();
 if ((Mower_Parked == 1) && (TFT_Screen_Menu == 1))                Send_Mower_Docked_Data();                               // Send Data to TFT Display
 
 
-// Mower is Parked with Low Battery needing manuel charging
-if ((Mower_Parked_Low_Batt == 1) && (LCD_Screen_Keypad_Menu == 1)) Print_LCD_Volt_Info();                                  // Print the battery voltage
-if ((Mower_Parked_Low_Batt == 1) && (LCD_Screen_Keypad_Menu == 1)) Print_Recharge_LCD();                                   // Print re-charge on the LCD screen
-if ((Mower_Parked_Low_Batt == 1) && (LCD_Screen_Keypad_Menu == 1)) Check_Membrane_Switch_Input_Parked();
 // Lost mower is put into standby mode
 
-if ((Mower_Error == 1)  && (LCD_Screen_Keypad_Menu == 1))         Print_Mower_Error();                     // Safety mode incase the mower is lostor in an error state
-if ((Mower_Error == 1)  && (LCD_Screen_Keypad_Menu == 1))         Check_Membrane_Switch_Input_Parked();
 if ((Mower_Error == 1)  && (TFT_Screen_Menu == 1))                Send_Mower_Error_Data();                               // Send Data to TFT Display
 
 
 // Mower is running cutting the grass.
-if ((Mower_Running == 1) && (LCD_Screen_Keypad_Menu == 1))                                                                Print_LCD_Volt_Info();              // Print the voltage to the LCD screen
 if  (Mower_Running == 1)                                                                                                  Process_Volt_Information();         // Take action based on the voltage readings
 if  (Mower_Running == 1)                                                                                                  Check_if_Raining_From_Nano();       // Test the rain sensor for rain. If detected sends the mower home
-if ((Mower_Running == 1) && (LCD_Screen_Keypad_Menu == 1))                                                                Check_Membrane_Keys_Running();      // Check to see if the mower needs to be stopped via keypad
 if  (Mower_Running == 1)                                                                                                  Check_Timed_Mow();                  // Check to see if the time to go home has come.
 if  (Mower_Running == 1)                                                                                                  TestforBoundaryWire();              // Test is the boundary wire is live
 if  (Mower_Running == 1)                                                                                                  Check_Tilt_Tip_Angle();             // Tests to see if the mower is overturned.
@@ -662,16 +649,19 @@ if ((Mower_Running == 1) && (GPS_Enabled == 1))                                 
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0))                                                  Check_Sonar_Sensors();              // If the mower is  the boundary wire check the sonars for obsticles and prints to the LCD
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 0))                              Manouver_Mow_The_Grass();           // Inputs to the wheel motors / blade motors according to surroundings 
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 0))                              Check_Bumper();                     // If the mower is  the boundary wire check the Bumper for activation
+//if ((Mower_Running == 1) && (TFT_Screen_Menu == 1))                                                                       Send_Mower_Running_Data_Fly();      // Send only neccesary info
 if ((Mower_Running == 1) && (Wire_Detected == 1) && ((Outside_Wire == 1) || (Bumper == 1))  && (Loop_Cycle_Mowing > 0))   Manouver_Turn_Around();             // If the bumper is activated or the mower is outside the boundary wire turn around
 if ((Mower_Running == 1) && (GPS_Enabled == 1) && (GPS_Inside_Fence == 0))                                                Manouver_Turn_Around();             // If the GPS Fence is activated Turn Around
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 1))                              Manouver_Turn_Around_Sonar();       // If sonar hit is detected and mower is  the wire, manouver around obsticle 
+if ((Mower_Running == 1) && (TFT_Screen_Menu == 1))                                                                       Send_Mower_Running_Data_Fly();      // Send only neccesary info
 
 // WIFI Commands from and to APP
-if (Manuel_Mode == 1) Receive_WIFI_Manuel_Commands();
-if (Manuel_Mode == 1) Print_LCD_Info_Manuel();
+if (Manuel_Mode == 1) Receive_WIFI_Manuel_Commands(); //HERE
 if ((WIFI_Enabled == 1) && (Manuel_Mode == 0)) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
 
-Serial.println(); 
+#ifdef DEBUG
+  Serial.println(); 
+#endif
   
 }  // End Loop
 

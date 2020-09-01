@@ -24,7 +24,11 @@ void Read_Serial1_Nano() {
       RawWheelAmp = Serial1_RX_Value.toInt();                               // same as upper but for VoltsTX
       Serial1_RX_Value = "";
       } 
-    else Serial.print(F("No Data Received|"));
+     else {
+      #ifdef DEBUG
+        Serial.print(F("No Data Received|"));
+      #endif
+      }
   }
 
   //Serial.print("WAMpRaw: ");

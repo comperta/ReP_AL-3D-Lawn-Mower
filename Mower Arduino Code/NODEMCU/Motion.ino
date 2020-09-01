@@ -2,22 +2,28 @@
 
 
 void Pause_Mower() {
-  Serial.println("");
-  Serial.println("Pause/Stop");
+  #ifdef DEBUG
+    Serial.println("");
+    Serial.println("Pause/Stop");
+  #endif
   transmit_blynk_code = 1;
   Transmit_Blynk_Data_to_Mega();
   }
 
 void Going_Home() {
-  Serial.println("");
-  Serial.println("Go to Dock");
+  #ifdef DEBUG
+    Serial.println("");
+    Serial.println("Go to Dock");
+  #endif
   transmit_blynk_code = 2;
   Transmit_Blynk_Data_to_Mega();
   }
 
 void StartMower() {
-  Serial.println("");
-  Serial.println("Quick Start");
+  #ifdef DEBUG
+    Serial.println("");
+    Serial.println("Quick Start");
+  #endif
   Mower_Parked = 0;
   Update_Blynk_App_With_Status();
   transmit_blynk_code = 3;                    // Code used to let MEGA know what to do
@@ -25,8 +31,10 @@ void StartMower() {
   }
 
 void Exit_Dock() {
-  Serial.println("");
-  Serial.println("Exit Dock");
+  #ifdef DEBUG
+    Serial.println("");
+    Serial.println("Exit Dock");
+  #endif
   Mower_Docked = 0;                           // Forces the APP to show docked as false.
                                               // Otherwise the APP needs to wait for the next update round
   Update_Blynk_App_With_Status();
@@ -36,8 +44,10 @@ void Exit_Dock() {
 
 
 void Set_To_Manuel_Mode() {
-    Serial.println("");
-    Serial.println("Manuel Mode Selected");
+    #ifdef DEBUG
+      Serial.println("");
+      Serial.println("Manuel Mode Selected");
+    #endif
     Update_Blynk_App_With_Status();
     transmit_blynk_code = 5;
     Transmit_Blynk_Data_to_Mega();
@@ -45,8 +55,10 @@ void Set_To_Manuel_Mode() {
 }
 
 void Set_To_Automatic_Mode_Random() {
-    Serial.println("");
-    Serial.println("Automatic Mode RANDOM Selected");
+    #ifdef DEBUG
+      Serial.println("");
+      Serial.println("Automatic Mode RANDOM Selected");
+    #endif
     Update_Blynk_App_With_Status();
     transmit_blynk_code = 6;
     Transmit_Blynk_Data_to_Mega();
@@ -54,8 +66,10 @@ void Set_To_Automatic_Mode_Random() {
 }
 
 void Set_To_Automatic_Mode_Spiral() {
-    Serial.println("");
-    Serial.println("Automatic Mode SPIRAL Selected");
+    #ifdef DEBUG
+      Serial.println("");
+      Serial.println("Automatic Mode SPIRAL Selected");
+    #endif
     Update_Blynk_App_With_Status();
     transmit_blynk_code = 11;
     Transmit_Blynk_Data_to_Mega();
@@ -63,8 +77,10 @@ void Set_To_Automatic_Mode_Spiral() {
 }
 
 void Set_To_Automatic_Mode_Parallel() {
-    Serial.println("");
-    Serial.println("Automatic Mode PARALLEL Selected");
+    #ifdef DEBUG
+      Serial.println("");
+      Serial.println("Automatic Mode PARALLEL Selected");
+    #endif
     Update_Blynk_App_With_Status();
     transmit_blynk_code = 12;
     Transmit_Blynk_Data_to_Mega();

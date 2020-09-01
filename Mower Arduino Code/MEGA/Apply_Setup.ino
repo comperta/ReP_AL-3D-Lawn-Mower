@@ -1,14 +1,15 @@
-void Print_Mower_Status() {
-  //Serial.print("Mower Stat....");
-  if (Mower_Docked == 1) Serial.print(F("Docked:1|"));
-  if (Mower_Parked == 1) Serial.print(F("Parked:1|"));
-  if (Mower_Running == 1) Serial.print(F("Running:1|"));
-  if (Manuel_Mode == 1) Serial.print(F("Manuel Mode:1|"));
-  if (Mower_Parked_Low_Batt == 1) Serial.print(F("Park_Low_Batt:1|"));
-  if (Mower_Error == 1) Serial.print(F("Mower Error:1|"));
-  
-}
-
+#ifdef DEBUG
+  void Print_Mower_Status() {
+    //Serial.print("Mower Stat....");
+    if (Mower_Docked == 1) Serial.print(F("Docked:1|"));
+    if (Mower_Parked == 1) Serial.print(F("Parked:1|"));
+    if (Mower_Running == 1) Serial.print(F("Running:1|"));
+    if (Manuel_Mode == 1) Serial.print(F("Manuel Mode:1|"));
+    if (Mower_Parked_Low_Batt == 1) Serial.print(F("Park_Low_Batt:1|"));
+    if (Mower_Error == 1) Serial.print(F("Mower Error:1|"));
+    
+  }
+#endif
 
 void Setup_Tilt_Tip_Safety() {
   if (Angle_Sensor_Enabled == 1)     pinMode(Tilt_Angle, INPUT);//define Data input pin input pin
@@ -99,20 +100,18 @@ void Setup_DFRobot_QMC5883_HMC5883L_Compass() {
       
         //HMC5883 Compass
         while ((!compass.begin()) && (Compass_Attempt <= 5)){
+          #ifdef DEBUG
             Serial.println(F("No HMC or QMC5883 sensor found, check wiring!"));
+          #endif
             delay(500);
             Compass_Attempt = Compass_Attempt + 1;
             }
             if (compass.isHMC()) {
+              #ifdef DEBUG
                 Serial.println(F("Initialize DF Robot HMC5883 Compass"));
+              #endif
                 Compass_Detected = 1;                        // HMC5883
-                if (LCD_Screen_Keypad_Menu == 1) {
-                    lcd.setCursor(6,0);
-                    lcd.print(F(": HMC5883"));
-                    delay(500);
-                    }
-      
-                        //compass.setRange(HMC5883L_RANGE_1_3GA);
+                       //compass.setRange(HMC5883L_RANGE_1_3GA);
                         //compass.setMeasurementMode(HMC5883L_CONTINOUS);
                         //compass.setDataRate(HMC5883L_DATARATE_15HZ);
                         //compass.setSamples(HMC5883L_SAMPLES_8);
@@ -121,13 +120,10 @@ void Setup_DFRobot_QMC5883_HMC5883L_Compass() {
             
              //QMC5883 Compass
               else if (compass.isQMC()) {
-                Serial.println(F("Initialising DF Robot QMC5883 Compass"));
+                #ifdef DEBUG
+                  Serial.println(F("Initialising DF Robot QMC5883 Compass"));
+                #endif
                 Compass_Detected = 2;                        // HMC5883
-                if (LCD_Screen_Keypad_Menu == 1) {
-                  lcd.setCursor(6,0);
-                  lcd.print(F(": QMC5883"));
-                  delay(500);
-                  }
                   compass.setRange(QMC5883_RANGE_2GA);
                   compass.setMeasurementMode(QMC5883_CONTINOUS); 
                   compass.setDataRate(QMC5883_DATARATE_50HZ);
@@ -137,24 +133,24 @@ void Setup_DFRobot_QMC5883_HMC5883L_Compass() {
           
             // Escape the loop if no compass is found but compass is activated in the settings
             if ((Compass_Attempt > 5) && (Compass_Found == 0)) {
-              Serial.println("No Valid Compass Found");
+              #ifdef DEBUG
+                Serial.println("No Valid Compass Found");
+              #endif
               Compass_Activate = 0;
-              Serial.println("Compass Deactivated");
+              #ifdef DEBUG
+                Serial.println("Compass Deactivated");
+              #endif
               delay(3000);
             }
-            if (LCD_Screen_Keypad_Menu == 1) {
-                  lcd.setCursor(0,1); 
-                  lcd.print(F("Done!             "));
-                  delay(500);
-                  lcd.clear();
-                  }
           //Wire.endTransmission(); 
           }
         
       
       
         if (Compass_Activate == 0) {
-            Serial.println(F("Compass Switched off - Select 1 in setup to switch on.")); 
+            #ifdef DEBUG
+              Serial.println(F("Compass Switched off - Select 1 in setup to switch on.")); 
+            #endif
             }
        
       }
@@ -163,7 +159,9 @@ void Setup_DFRobot_QMC5883_HMC5883L_Compass() {
 void Setup_Gyro() {
 
         if (GYRO_Enabled == 1) {
-        Serial.println("GYRO GY-521 Activated");
+        #ifdef DEBUG
+          Serial.println("GYRO GY-521 Activated");
+        #endif
         Wire.begin();
         Wire.beginTransmission(MPU_addr);
         Wire.write(0x6B);
@@ -174,7 +172,9 @@ void Setup_Gyro() {
 
 
 void Setup_Relays() {
-  Serial.println(F("Setup Relays"));
+  #ifdef DEBUG
+    Serial.println(F("Setup Relays"));
+  #endif
   pinMode(Relay_Motors, OUTPUT);
   delay(5);
   Turn_Off_Relay();
@@ -182,7 +182,9 @@ void Setup_Relays() {
   }
 
 void Setup_Motor_Pins() {
-  Serial.println(F("Setup Motor Pins"));
+  #ifdef DEBUG
+    Serial.println(F("Setup Motor Pins"));
+  #endif  
   pinMode(L_EN, OUTPUT);
   pinMode(R_EN, OUTPUT);
   pinMode(RPWM, OUTPUT);
@@ -190,25 +192,30 @@ void Setup_Motor_Pins() {
 
 
 void  Turn_On_Relay() {
+  #ifdef DEBUG
    Serial.print(F("Relay:ON|"));
+   #endif
    if (PCB == 0) digitalWrite(Relay_Motors, LOW);                         // Turn of the relay for the main battery power
    if (PCB == 1) digitalWrite(Relay_Motors, HIGH); 
    }
 
 void  Turn_Off_Relay() {
+   #ifdef DEBUG
    Serial.print(F("Relay:Off|"));
+   #endif
    if (PCB == 0) (digitalWrite(Relay_Motors, HIGH));                         // Turn of the relay for the main battery power
    if (PCB == 1) (digitalWrite(Relay_Motors, LOW));    
    }
 
 void Setup_Membrane_Buttons() {
+  #ifdef DEBUG
   Serial.println(F("Setup Membrane Keys"));
+  #endif
   pinMode(Start_Key, INPUT_PULLUP);            // set pin as input
   pinMode(Plus_Key, INPUT_PULLUP);            // set pin as input
   pinMode(Minus_Key, INPUT_PULLUP);            // set pin as input
   pinMode(Stop_Key, INPUT_PULLUP);            // set pin as input  
   }
-
 
 void Setup_Bumper_Bar() {
   pinMode(Bumper_Switch_Frnt_RH, INPUT_PULLUP); 
@@ -216,11 +223,15 @@ void Setup_Bumper_Bar() {
 }
 
 void Setup_ADCMan() {
+  #ifdef DEBUG
   Serial.println(F("Setting up ADCMAN"));
+  #endif
 
   if (Perimeter_Wire_Enabled == 1) {
       // Wire Sensor
+      #ifdef DEBUG
       Serial.println(F("Setting up Wire Sensor"));
+      #endif
       ADCMan.init();
       ADCMan.setCapture(pinPerimeterLeft, 1, 0);
       perimeter.setPins(pinPerimeterLeft, pinPerimeterRight);
@@ -230,7 +241,9 @@ void Setup_ADCMan() {
 
   if (GPS_Enabled == 1) {
       // GPS Fence Sensor 
+      #ifdef DEBUG
       Serial.println(F("Setting up GPS Fence Sensor"));
+      #endif
       pinMode(GPS_Fence_Signal_Pin, INPUT);
       pinMode(GPS_Lock_Pin, INPUT);
       ADCMan.init();
@@ -241,26 +254,5 @@ void Setup_ADCMan() {
   ADCMan.run();
 }
 
-
-void Setup_Check_Pattern_Mow() {
-  if (Pattern_Mow == 1) {
-    lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print("Pattern Mow");
-    lcd.setCursor(0,1);
-    lcd.print("Parallel");
-    delay(1000);
-    lcd.clear();
-    }
-  if (Pattern_Mow == 2) {
-    lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print("Pattern");
-    lcd.setCursor(0,1);
-    lcd.print("Spirals");
-    delay(1000);
-    lcd.clear();
-    }
-}
     
   

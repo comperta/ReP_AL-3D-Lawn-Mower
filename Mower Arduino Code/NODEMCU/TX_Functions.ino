@@ -6,8 +6,10 @@ void Transmit_Blynk_Data_to_Mega() {
       NodeMCU.print(i);
       NodeMCU.println("\p");
       delay(30);
-      Serial.print("TX_Code_to_MEGA:");
-      Serial.print(i);
-      Serial.print("");
+      #ifdef DEBUG
+        Serial.print("TX_Code_to_MEGA:");
+        Serial.print(i);
+        Serial.print("");
+      #endif
       delay(20);
       }

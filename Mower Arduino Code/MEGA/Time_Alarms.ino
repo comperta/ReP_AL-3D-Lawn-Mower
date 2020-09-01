@@ -1,6 +1,8 @@
 // digital clock display of the time
 void DisplayTime_DS1302()   {
-  Serial.print(F("Time:"));
+  #ifdef DEBUG
+    Serial.print(F("Time:"));
+  #endif
   Time t = rtc.time();  
  
   // Name the day of the week.
@@ -14,11 +16,13 @@ void DisplayTime_DS1302()   {
            t.hr, t.min, t.sec);
 
   // Print the formatted string to serial so we can see the time.
-  Serial.print(buf);
+  #ifdef DEBUG
+    Serial.print(buf);
+  #endif
  
   }
 
-
+#ifdef DEBUG
 void Print_Time_On_Serial_Monitor() {
       
       if (PCB == 0) {
@@ -36,7 +40,7 @@ void Print_Time_On_Serial_Monitor() {
         Display_DS3231_Time();       
         }
       }
-
+#endif
 
 void Activate_Alarms() {
 
@@ -45,9 +49,11 @@ void Activate_Alarms() {
   // Manual ALARM 1
   if (Alarm_1_ON == 1) {  
      if ((t.hr == Alarm_1_Hour) && (t.min == Alarm_1_Minute)) {
-       Serial.println("");
-       Serial.println(F("ALARM 1"));
-       delay(2000);
+       #ifdef DEBUG
+          Serial.println("");
+          Serial.println(F("ALARM 1"));
+          delay(2000);
+       #endif
        // Insert action for Alarm 1 Here
        if (Alarm_1_Action == 1) {
         Exit_Zone = 1;
@@ -111,7 +117,9 @@ void Check_Timed_Mow() {
   if (Alarm_Timed_Mow_ON == 1) {  
       Time t = rtc.time();
      if ((t.hr == Alarm_Timed_Mow_Hour) && (t.min == Alarm_Timed_Mow_Minute)) {
+       #ifdef DEBUG
        Serial.println(F("Timed Mow Complete"));
+       #endif
        delay(2000);
        //Insert action for Timed Mow Alarm Here
          if (Use_Charging_Station == 1) Manouver_Go_To_Charging_Station();                       // Stops the mowing and sends the mower back to the charging station via the permieter wire
@@ -120,7 +128,7 @@ void Check_Timed_Mow() {
      }
 }
  
-
+#ifdef DEBUG
 // Prints the alarms set to the serial monitor
 void Display_Next_Alarm()  {
   //Print_Day();
@@ -157,6 +165,7 @@ void Display_Next_Alarm()  {
 
    
 }
+#endif
 
 void Set_Time_On_DS1302(){
    // Set_Time to 1 in the setting menu to set time.  Load the sketch then immediatley Set_Time = 0 and reload the sketch.

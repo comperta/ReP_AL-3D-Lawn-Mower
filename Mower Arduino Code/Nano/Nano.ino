@@ -1,7 +1,8 @@
 #include <SoftwareSerial.h>
+//#define DEBUG    //uncomment to activate
+//#define TEST     //uncomment to activate
 
-
-SoftwareSerial mySerial(10, 11);  // RX, TX
+SoftwareSerial Nano(10, 11);  // RX, TX
 
 //Amp Sensor Variables.
 int RawValueAmp= 0;
@@ -20,9 +21,13 @@ int   Wheel_Blocked;
 float AmpLimit = 1.0;
 
 void setup(){ 
- Serial.begin(9600);
+  #ifdef DEBUG
+    Serial.begin(9600);
+    Serial.println();
+    Serial.println("debug mode on");
+  #endif
  mySerial.begin(1200);
- Test = 0;
+
 
  
  
@@ -31,10 +36,11 @@ void setup(){
  pinMode(A3, INPUT);
  pinMode(A6, INPUT);
 
- if (Test == 1) {
-  RawValueAmp = 510;
-  RawValueVolt = 500;
- }
+
+  #ifdef TEST
+    RawValueAmp = 510;
+    RawValueVolt = 500;
+  #endif
 }
 
 void Calculate_Volt_Amp() {
@@ -100,21 +106,18 @@ void TX_Wheel_Blocked()  {
 void loop(){
 
  //Read Amp and Volt Raw Number Sensor Values 
- if (Test == 0) { 
- RawValueAmp = analogRead(A1);
- RawValueVolt = analogRead(A2);
- Raining = analogRead(A3);
- RawWheelAmp = analogRead(A6);
- }
-
-  if (Test == 1 )   {
- RawValueAmp = RawValueAmp + 1;
- if (RawValueAmp > 550) RawValueAmp = 500;
- RawValueVolt = RawValueVolt + 1;
- if (RawValueVolt > 550) RawValueVolt = 500;
-  }
-
-
+  #ifdef TEST
+    RawValueAmp = RawValueAmp + 1;
+    if (RawValueAmp > 550) RawValueAmp = 500;
+    RawValueVolt = RawValueVolt + 1;
+    if (RawValueVolt > 550) RawValueVolt = 500;
+  #else
+    RawValueAmp = analogRead(A1);
+    RawValueVolt = analogRead(A2);
+    Raining = analogRead(A3);
+    RawWheelAmp = analogRead(A6);
+  #endif
+ #ifdef DEBUG
  Serial.print("VoltsTX Raw = ");
  Serial.print(RawValueVolt);
  Serial.print("|");
@@ -124,15 +127,16 @@ void loop(){
  Serial.print("Wheel Raw = ");
  Serial.print (RawWheelAmp);
  Serial.print("|");
-
+#endif
  Calculate_Volt_Amp();
-
+ #ifdef DEBUG
  Serial.print("VoltsTX = ");
  Serial.print(VoltsTX);
  Serial.print("|");
-
+#endif
  if (AmpsTX < 0.4) Charging = 0;
  if (AmpsTX > 0.4) Charging = 4;
+  #ifdef DEBUG
  Serial.print("Charging = ");  
  Serial.print(Charging);
  Serial.print("|");
@@ -144,10 +148,11 @@ void loop(){
  Serial.print("Rain Sensor Raw = ");
  Serial.print (Raining);
  Serial.print("|");
-
+#endif
 if (Raining < 100) Raining = 0;
 if (Raining >= 100) Raining = 1;
 
+#ifdef DEBUG
 Serial.print( "Raining = ");
 Serial.print(Raining);
 Serial.print("|");
@@ -155,16 +160,20 @@ Serial.print("|");
 Serial.print( "Wheel Amps = ");
 Serial.print(WheelAmpsTX);
 Serial.print("|");
-
+#endif
 if (WheelAmpsTX > AmpLimit) {
+  #ifdef DEBUG
   Serial.println("!! Wheel Blocked !!");
+  #endif
   Wheel_Blocked = 4;
   }
 if (WheelAmpsTX <= AmpLimit) {
   Wheel_Blocked = 0;
   }
 
+ #ifdef DEBUG
  Serial.println("");
+ #endif
  
  //TX_Charge();
  TX_Raw_Value_Charge(); 
