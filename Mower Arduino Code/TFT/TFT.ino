@@ -245,7 +245,7 @@ int INOUT;
 int MAG;
 
 // Tilt Sensor
-bool Tilt_Angle_Sensed;
+bool Tilt_Angle_Sensed = 1;
 bool Tilt_Orientation_Sensed;
 int  Angle_Sensor_Enabled;
 int  Tip_Over_Sensor_Enabled;
@@ -500,11 +500,11 @@ if (Mower_Status_Value == 5) {
     // Actions to continously monitor while mowing
     while (Menu_Complete_Mowing == false) { 
         Clear_TFT_Loop_Info_Mowing();                 // Clear the last Loop Value
-        Receive_Mower_Running_Data();      
-        //Print_Battery_Graphic();     
+        Receive_Mower_Running_Data();                 // Large update when mower is stopped
+        if (Battery > 8 ) Print_Battery_Graphic();             
         Update_TFT_Loop_Info_Mowing();                // Print the new Loop value
         Update_TFT_Mower_Messages_Mowing();  
-
+        //Receive_Mower_Running_Data_Fly();             // Small Update
         if ((Mower_Status_Value != 5) && (Mower_Status_Value != 0))  Menu_Complete_Mowing = true;
      
         // Give time for the touch screen to sense the STOP button being pressed

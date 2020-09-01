@@ -1,35 +1,23 @@
 ReP_AL 3D Printed Robot Lawn Mower
 ----------------------------------
 
-Code V8.0  BETA    04.05.2020
+Code V8.3
 ------------------------------
 
 Upload the MEGA code to the Arduino MEGA
 Upload the Nano code to the Arduino Nano
 Upload the NodeMCU code to the NodeMCU Board   (includes new code)
-Upload the TFT Code to the TFT MEGA Shield
-Upload the BMP Files to the TFT SD Card (in the route folder of the SD card)
 
 
-Features of 8.0 BETA
---------------------
+Features of V8.3
+---------------
 
-- TFT Display is added (TFT_Screen_Menu = 1 in Settings to turn on TFT function
-			Ensure LCD_Scree_Keypad_Menu = 0 )
-- Bumper Bar is activated in finding wire function
-- Angle Stop Capability added
-- Tip Over Safety Stop Capability added
-
-Experimental
-- Slow at wire function - Slows the mower when it gets to the wire to ensure the wire is detected in time.
-
-
-Known Issues of 8.0 BETA
-------------------------
-- With TFT longer reaction time than normal to detect wire (see slow at wire function to help)
-- TFT Some menus get stuck when returning to the home screen
-- TFT Test scripts dont always start correctly
-
+- Add MQTT to NodeMCU Board 
+- Add DEBUG mode  in order to display serial.print and serial.println only if it is active
+- Create a config.h file to enter all the information necessary for the proper functioning of the wifi / MQTT / Blynk
+- Manage choice between mqqt and blink via a variable: app = blynk; or app = MQTT; in config.http
+- Code optimization
+- Comment optimization
 
 
 NodeMCU Board URL:

@@ -12,34 +12,38 @@ void Receive_All_From_MEGA () {
       } 
 
       else if (recieved == '\g') {
-      val_VoltNow = NodeMCU_RX_Value.toFloat();                                 // if end of value found, set AmpsTX and clear Serial1_Rx_Value temp var Serial1_Rx_Value used for holding value until \q or \j
+      val_VoltNow = NodeMCU_RX_Value.toFloat();                              // if end of value found, set AmpsTX and clear Serial1_Rx_Value temp var Serial1_Rx_Value used for holding value until \q or \j
       NodeMCU_RX_Value = ""; // changed to string
       } 
       else if (recieved == '\c') {
-      Loop_Cycle_Mowing = NodeMCU_RX_Value.toInt();                                // same as upper but for VoltsTX, 
+      Loop_Cycle_Mowing = NodeMCU_RX_Value.toInt();                          // same as upper but for LoopTX, 
       NodeMCU_RX_Value = "";
       } 
       else if (recieved == '\d') {
-      Mower_Docked = NodeMCU_RX_Value.toInt();                               // same as upper but for VoltsTX
+      Mower_Docked = NodeMCU_RX_Value.toInt();                               // same as upper but for DockedTX
       NodeMCU_RX_Value = "";
       } 
       else if (recieved == '\z') {
-      Mower_Running = NodeMCU_RX_Value.toInt();                               // same as upper but for VoltsTX
+      Mower_Running = NodeMCU_RX_Value.toInt();                               // same as upper but for MoveTX
       NodeMCU_RX_Value = "";
       } 
       else if (recieved == '\y') {
-      Mower_Parked = NodeMCU_RX_Value.toInt();                               // same as upper but for VoltsTX
+      Mower_Parked = NodeMCU_RX_Value.toInt();                               // same as upper but for ParkedTX
       NodeMCU_RX_Value = "";
       } 
       else if (recieved == '\o') {
-      Charge_Detected = NodeMCU_RX_Value.toInt();                               // same as upper but for VoltsTX
+      Charge_Detected = NodeMCU_RX_Value.toInt();                               // same as upper but for ChargingTX
       NodeMCU_RX_Value = "";
       } 
       else if (recieved == '\m') {
-      Tracking_Wire = NodeMCU_RX_Value.toInt();                               // same as upper but for VoltsTX
+      Tracking_Wire = NodeMCU_RX_Value.toInt();                               // same as upper but for TrackingTX
       NodeMCU_RX_Value = "";
       } 
-    else Serial.print("No Data Received|");
+    else {
+      #ifdef DEBUG
+        Serial.print("No Data Received|");
+      #endif  
+    }
   }
   Print_RX_Values();
   Calculate_Filtered_Mower_Status();
@@ -48,33 +52,36 @@ void Receive_All_From_MEGA () {
 
 void Print_RX_Values() {
         BatteryVoltage = val_VoltNow;
-        Serial.print("Volt:");
-        Serial.print(BatteryVoltage);
-        Serial.print("|");
-
-        Serial.print("Loop:");
-        Serial.print(Loop_Cycle_Mowing);  
-        Serial.print("|");  
-
-        Serial.print("Docked:");
-        Serial.print(Mower_Docked);
-        Serial.print("|");  
-        
-        Serial.print("Running:");
-        Serial.print(Mower_Running);
-        Serial.print("|");  
-
-        Serial.print("Parked:");
-        Serial.print(Mower_Parked);  
-        Serial.print("|");
-
-        Serial.print("Charge:");
-        Serial.print(Charge_Detected);  
-        Serial.print("|");
-
-        Serial.print("Tracking:");
-        Serial.print(Tracking_Wire);  
-        Serial.print("|");
+        #ifdef DEBUG
+          Serial.print("Volt:");
+          Serial.print(BatteryVoltage);
+          Serial.print("|");
+  
+          Serial.print("Loop:");
+          Serial.print(Loop_Cycle_Mowing);  
+          Serial.print("|");  
+  
+          Serial.print("Docked:");
+          Serial.print(Mower_Docked);
+          Serial.print("|");  
+          
+          Serial.print("Running:");
+          Serial.print(Mower_Running);
+          Serial.print("|");  
+  
+          Serial.print("Parked:");
+          Serial.print(Mower_Parked);  
+          Serial.print("|");
+  
+          Serial.print("Charge:");
+          Serial.print(Charge_Detected);  
+          Serial.print("|");
+  
+          Serial.print("Tracking:");
+          Serial.print(Tracking_Wire);  
+          Serial.print("|");
+          Serial.println();
+        #endif
 }
 
 

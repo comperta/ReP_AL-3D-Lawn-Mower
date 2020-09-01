@@ -1115,15 +1115,42 @@ void Receive_Mower_Running_Volt_Data() {
 }
 
 
-void Receive_Mower_Running_Data() {
+void Receive_Mower_Running_Data_Fly() {
 
   String Serial1_RX_Value  = "";                                            
 
   while (Serial1.available() > 0) {
     
     char recieved = Serial1.read();
-    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d' && recieved != '\e' && recieved != '\f' 
-          && recieved != '\g'  && recieved != '\h') { 
+    if ( recieved != '\g' && recieved != '\h') { 
+              
+      Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
+      } 
+      else if (recieved == '\g') {
+      Loops = Serial1_RX_Value.toInt();                                 
+      Serial1_RX_Value = ""; // changed to string
+      } 
+      else if (recieved == '\h') {
+      Compass_Steering_Status = Serial1_RX_Value.toInt();                                 
+      Serial1_RX_Value = ""; // changed to string
+      } 
+    }
+        Serial.print(F("|Lo:"));
+        Serial.print(Loops);
+        Serial.print(F("|CS:"));
+        Serial.print(Compass_Steering_Status);
+}
+
+void Receive_Mower_Running_Data() {
+
+  int VoltsTX;
+  String Serial1_RX_Value  = "";                                            
+
+  while (Serial1.available() > 0) {
+    
+    char recieved = Serial1.read();
+    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d' && recieved != '\e' 
+    && recieved != '\f' && recieved != '\g') { 
               
       Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
       } 
@@ -1140,23 +1167,19 @@ void Receive_Mower_Running_Data() {
       Serial1_RX_Value = ""; // changed to string
       } 
       else if (recieved == '\d') {
-      Loops = Serial1_RX_Value.toInt();                                 
-      Serial1_RX_Value = ""; // changed to string
-      } 
-      else if (recieved == '\e') {
-      Compass_Steering_Status = Serial1_RX_Value.toInt();                                 
-      Serial1_RX_Value = ""; // changed to string
-      } 
-      else if (recieved == '\f') {
       Mower_Status_Value = Serial1_RX_Value.toInt();                                 
       Serial1_RX_Value = ""; // changed to string
       } 
-      else if (recieved == '\g') {
+      else if (recieved == '\e') {
       Mower_Error_Value = Serial1_RX_Value.toInt();                                 
       Serial1_RX_Value = ""; // changed to string
       } 
-      else if (recieved == '\h') {
+      else if (recieved == '\f') {
       Tilt_Angle_Sensed = Serial1_RX_Value.toInt();                                 
+      Serial1_RX_Value = ""; // changed to string
+      } 
+      else if (recieved == '\g') {
+      VoltsTX = Serial1_RX_Value.toInt();                                 
       Serial1_RX_Value = ""; // changed to string
       } 
     else Serial.print(F("No Data Received|"));
@@ -1169,14 +1192,16 @@ void Receive_Mower_Running_Data() {
         Serial.print(Wire_Status);    
         Serial.print(F("|BU:"));
         Serial.print(Bumper_Status);               
-        Serial.print(F("|Lo:"));
-        Serial.print(Loops);
-        Serial.print(F("|CS:"));
-        Serial.print(Compass_Steering_Status);
         Serial.print(F("|MS:"));
         Serial.print(Mower_Status_Value);
         Serial.print(F("|Tip:"));
         Serial.print(Tilt_Angle_Sensed);
+        Battery = VoltsTX;
+        Battery = Battery / 100;
+        Serial.print(F("VoltsRX = "));
+        if (VoltsTX > 0) Serial.print(Battery);
+        else Serial.print("XX.XX");
+
 }
 
 
