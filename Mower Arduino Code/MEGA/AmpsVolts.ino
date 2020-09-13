@@ -73,13 +73,20 @@ void Check_if_Docked() {
   
   if (Charge_Detected_MEGA == 1) {                                    // if Amps are between this there is a charge detected.  Amps above 4 are discounted as a miscommunication
         Motor_Action_Stop_Motors();    
+        Serial.println(F(""));
         Serial.println(F("Charging Current detected"));
-        Serial.println(F("Mower Docked"));
-        lcd.clear();
-        lcd.setCursor(0, 0);
-        lcd.print(F("Docked in"));
-        lcd.setCursor(0, 1);
-        lcd.print(F("Charging Station"));                                // Prints info to LCD display
+        Serial.println(F(""));
+        Serial.println(F("----------------"));
+        Serial.println(F("| Mower Docked |"));
+        Serial.println(F("----------------"));
+        Serial.println(F(""));
+        if (LCD_Screen_Keypad_Menu == 1) {
+          lcd.clear();
+          lcd.setCursor(0, 0);
+          lcd.print(F("Docked in"));
+          lcd.setCursor(0, 1);
+          lcd.print(F("Charging Station"));                                // Prints info to LCD display 
+          }
         delay(2000);
         Mower_Docked = 1;
         // Update the TFT Screen

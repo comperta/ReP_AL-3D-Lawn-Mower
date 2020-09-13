@@ -7,7 +7,7 @@ void Receive_All_From_MEGA () {
   while (NodeMCU.available() > 0) {
     
     char recieved = NodeMCU.read();
-    if ( recieved != '\g'  && recieved != '\c' && recieved != '\d' && recieved != '\z' && recieved != '\y' && recieved != '\o' && recieved != '\m') {   
+    if ( recieved != '\g'  && recieved != '\c' && recieved != '\d' && recieved != '\z' && recieved != '\y' && recieved != '\o' && recieved != '\m' && recieved != '\b') {   
       NodeMCU_RX_Value = NodeMCU_RX_Value +  (char)recieved;          // hack to joining chars in correct way to Serial1_Rx_Value
       } 
 
@@ -39,14 +39,12 @@ void Receive_All_From_MEGA () {
       Tracking_Wire = NodeMCU_RX_Value.toInt();                               // same as upper but for VoltsTX
       NodeMCU_RX_Value = "";
       } 
+      else if (recieved == '\b') {
+      Update_APP_Buttons = NodeMCU_RX_Value.toInt();                               // same as upper but for VoltsTX
+      NodeMCU_RX_Value = "";
+      } 
     else Serial.print("No Data Received|");
   }
-  Print_RX_Values();
-  Calculate_Filtered_Mower_Status();
-}
-
-
-void Print_RX_Values() {
         BatteryVoltage = val_VoltNow;
         Serial.print("Volt:");
         Serial.print(BatteryVoltage);
@@ -75,6 +73,12 @@ void Print_RX_Values() {
         Serial.print("Tracking:");
         Serial.print(Tracking_Wire);  
         Serial.print("|");
+
+        Serial.print("Btn Update:");
+        Serial.print(Update_APP_Buttons);  
+        Serial.print("|");
+  
+  Calculate_Filtered_Mower_Status();
 }
 
 
@@ -92,4 +96,64 @@ void Calculate_Filtered_Mower_Status() {
     }
     else Mower_Running_Filter = 0;
     
+}
+
+
+
+
+void Recieve_App_Button_Status () {
+
+  String NodeMCU_RX_Value  = "";                                              // changed to string
+
+  while (NodeMCU.available() > 0) {
+    
+    char recieved = NodeMCU.read();
+    if ( recieved != '\h'  && recieved != '\r' && recieved != '\w' ) {   
+      NodeMCU_RX_Value = NodeMCU_RX_Value +  (char)recieved;          // hack to joining chars in correct way to Serial1_Rx_Value
+      } 
+
+      else if (recieved == '\h') {
+      Compass_Activate = NodeMCU_RX_Value.toInt();                                 // if end of value found, set AmpsTX and clear Serial1_Rx_Value temp var Serial1_Rx_Value used for holding value until \q or \j
+      NodeMCU_RX_Value = ""; // changed to string
+      } 
+      else if (recieved == '\r') {
+      Compass_Heading_Hold_Enabled = NodeMCU_RX_Value.toInt();                                // same as upper but for VoltsTX, 
+      NodeMCU_RX_Value = "";
+      } 
+      else if (recieved == '\w') {
+      GYRO_Enabled = NodeMCU_RX_Value.toInt();                               // same as upper but for VoltsTX
+      NodeMCU_RX_Value = "";
+      }
+    
+    else Serial.print("No Data Received|");
+  }
+
+        Serial.print("Compass_Activate:");
+        Serial.print(Compass_Activate);
+        if (Compass_Activate == 2) Compass_Activate = 0;
+        if (Compass_Activate == 3) Compass_Activate = 1;
+        Serial.print("/");
+        Serial.print(Compass_Activate);
+        Serial.print("|");
+
+        Serial.print("Heading Hold TX:");
+        Serial.print(Compass_Heading_Hold_Enabled);  
+        Serial.print("/");  
+        if (Compass_Heading_Hold_Enabled == 2) Compass_Heading_Hold_Enabled = 0;
+        if (Compass_Heading_Hold_Enabled == 3) Compass_Heading_Hold_Enabled = 1;
+        Serial.print(Compass_Heading_Hold_Enabled);
+        Serial.print("|");     
+        
+        Serial.print("GYRO TX:");
+        Serial.print(GYRO_Enabled);
+        Serial.print("/");
+        if (GYRO_Enabled == 2) GYRO_Enabled = 0;
+        if (GYRO_Enabled == 3) GYRO_Enabled = 1;
+        Serial.print(GYRO_Enabled);
+        Serial.print("|");  
+
+        Serial.print("App Button");
+        Serial.print(Update_APP_Buttons);
+        Serial.print("|"); 
+
 }

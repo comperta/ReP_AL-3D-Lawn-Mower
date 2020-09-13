@@ -26,10 +26,10 @@ void Print_Time_On_Serial_Monitor() {
         Time t = rtc.time();
         Serial.print(t.hr);
         Serial.print(":");
-        if (t.min < 10) Serial.print ("0");
+        if (t.min < 10) Serial.print(F("0"));
         Serial.print(t.min);
         Serial.print(".");
-        if (t.sec < 10) Serial.print ("0");
+        if (t.sec < 10) Serial.print(F("0"));
         Serial.print(t.sec);
         }
       if (PCB == 1) {
@@ -248,8 +248,10 @@ Time_Second = second;
 Serial.print("Time:");
 Serial.print(Time_Hour);
 Serial.print(":");
+if (Time_Minute < 10) Serial.print("0");
 Serial.print(Time_Minute);
 Serial.print(":");
+if (Time_Second < 10) Serial.print("0");
 Serial.print(Time_Second);
 
 }

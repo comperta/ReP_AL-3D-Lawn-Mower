@@ -32,54 +32,6 @@ if (Use_Charging_Station == 0) {
  }
 
 
-void Setup_QMC5883L_Compass() {
-    if (Compass_Activate == 1) {
-        Serial.println("Setting up QMC5883L Compass - Mode 3");
-        Compass_Detected = 4;
-        Wire.begin();
-        compass2.init();
-        compass2.setSamplingRate(50);
-        }
-    } 
-
-void Setup_Manuel_QMC5883_Compass_2() {
-    if (Compass_Activate == 1) {
-        Wire.begin();
-        //Initialize Serial and I2C communications
-        Serial.println("Setting up QMC5883 Compass - Mode 2");
-    
-        //Put the QMC5883L IC into the correct operating mode:
-        Wire.beginTransmission(QMC5883_ADDRESS); //Open communication with QMC5883L.    
-        Wire.write(0x09); //Select mode register.         (0x0B)? (0x09)
-        Wire.write(0x1D); //Continuous measurement mode.  (0x0D)? (0x1D)
-
-        Wire.endTransmission();
-        Compass_Detected = 3;
-        }
-    }
-
-
-void Setup_Manuel_QMC5883_Compass() {
-  //Enter Manual Code here
-  Serial.println(F("No Manuel Code Written - Use DF Robot and GY282 Compass"));
-
-}
-
-byte i2c_write(byte device, byte addr, byte value) {
-  byte n;
-  Wire.beginTransmission(device);
-  n = Wire.write(addr);
-  if (n != 1) Serial.println("Wire.write(addr) failed");
-  n = Wire.write(value);
-  if (n != 1) Serial.println("Wire.write(value) failed");
-  n = Wire.endTransmission(true);
-  if (n != 0)     {
-    char msg[100];
-    sprintf(msg, "sendHMC5883 i2c[%02x:%02x]=%02x returns %d", device, addr, value,n);
-    Serial.println(msg);
-  }
-  return n;
-}
 
 void Setup_DFRobot_QMC5883_HMC5883L_Compass() {
  

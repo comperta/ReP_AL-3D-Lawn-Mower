@@ -31,7 +31,7 @@ void Check_if_Raining_From_Nano() {
   Serial.print("RHit:");
   Serial.print(Rain_Hit_Detected);
   Serial.print("|");
-  }
+  
 
 if ( (Mower_Running == 1) && (Rain_Hit_Detected == Rain_Total_Hits_Go_Home) ) {
   Motor_Action_Stop_Motors();
@@ -42,5 +42,5 @@ if ( (Mower_Running == 1) && (Rain_Hit_Detected == Rain_Total_Hits_Go_Home) ) {
   delay(2000);
   Manouver_Go_To_Charging_Station();            // If the Mower is running then go to the charge station. 
   }
-
+  }
 }

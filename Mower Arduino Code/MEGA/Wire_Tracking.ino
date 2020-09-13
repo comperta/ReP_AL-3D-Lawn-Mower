@@ -480,46 +480,50 @@ void Track_Perimeter_Wire_To_Dock()  {
 
 //Starts an algorithym to find the wire again after it is lost in tracking
 void Tracking_Restart_Blocked_Path() {
-  Motor_Action_Stop_Motors();
-  Serial.println(F("Possible Blocked Path - Trying to Avoid"));
-  Mower_Running = 1;
-  Tracking_Wire = 1;
-  if (WIFI_Enabled == 1) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
-  delay(1000);
-  Mower_Running = 0;
-  Tracking_Wire = 0;
-  if (WIFI_Enabled == 1) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
-  delay(1000);
-  Mower_Running = 1;
-  Tracking_Wire = 1;
-  if (WIFI_Enabled == 1) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
-  delay(1000);
-  Mower_Running = 0;
-  Tracking_Wire = 0;
-  if (WIFI_Enabled == 1) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
-  delay(1000);
-  
-  lcd.clear();
-  lcd.print("Wire Lost.");
-  lcd.setCursor(0, 1);
-  lcd.print("Recovering.....");                                 // Prints info to LCD display
-  if (WIFI_Enabled == 1) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
-  if (Mower_Parked != 1) {                                                                              // If Pause has been pressed dont carry on.
-    SetPins_ToGoBackwards();
-    delay(500);
-    Motor_Action_Go_Full_Speed();
-    delay (5000);                                                 //Reversing Time in seconds
-    Motor_Action_Stop_Motors();
-    delay(2000);
-    Tracking_Turn_Left = 0;                                       // Resets the tracking error counters
-    Tracking_Turn_Right = 0;                                      // Resets the tracking error counters
-    delay(500);
-    Mower_Running = 0;
-    Tracking_Wire = 0;
-    if (WIFI_Enabled == 1) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
-    if (Compass_Activate == 1) Compass_Turn_Mower_To_Home_Direction();
-    Manouver_Find_Wire_Track();
-    //Track_Perimeter_Wire_To_Dock();
-    }
+  if (Mower_Docked != 1) {  
+      Motor_Action_Stop_Motors();
+      Serial.println(F(""));
+      Serial.println(F("Possible Blocked Path - Trying to Avoid"));
+      Serial.println(F(""));
+      Mower_Running = 1;
+      Tracking_Wire = 1;
+      if (WIFI_Enabled == 1) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
+      delay(1000);
+      Mower_Running = 0;
+      Tracking_Wire = 0;
+      if (WIFI_Enabled == 1) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
+      delay(1000);
+      Mower_Running = 1;
+      Tracking_Wire = 1;
+      if (WIFI_Enabled == 1) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
+      delay(1000);
+      Mower_Running = 0;
+      Tracking_Wire = 0;
+      if (WIFI_Enabled == 1) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
+      delay(1000);
+      
+      lcd.clear();
+      lcd.print("Wire Lost.");
+      lcd.setCursor(0, 1);
+      lcd.print("Recovering.....");                                                 // Prints info to LCD display
+      if (WIFI_Enabled == 1) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
+      if (Mower_Parked != 1) {                                                      // If Pause has been pressed dont carry on.
+        SetPins_ToGoBackwards();
+        delay(500);
+        Motor_Action_Go_Full_Speed();
+        delay (5000);                                                 //Reversing Time in seconds
+        Motor_Action_Stop_Motors();
+        delay(2000);
+        Tracking_Turn_Left = 0;                                       // Resets the tracking error counters
+        Tracking_Turn_Right = 0;                                      // Resets the tracking error counters
+        delay(500);
+        Mower_Running = 0;
+        Tracking_Wire = 0;
+        if (WIFI_Enabled == 1) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
+        if (Compass_Activate == 1) Compass_Turn_Mower_To_Home_Direction();
+        Manouver_Find_Wire_Track();
+        //Track_Perimeter_Wire_To_Dock();
+        }
+  }
   
 }  
