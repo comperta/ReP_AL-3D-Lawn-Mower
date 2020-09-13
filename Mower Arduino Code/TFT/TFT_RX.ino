@@ -1345,12 +1345,9 @@ void Receive_Mower_Running_Data_Fly() {
         Serial.print(Compass_Steering_Status);
 }
 
-<<<<<<< HEAD
 
 
 
-=======
->>>>>>> 8.0 MQTT
 void Receive_Mower_Running_Data() {
 
   int VoltsTX;
@@ -1359,13 +1356,10 @@ void Receive_Mower_Running_Data() {
   while (Serial1.available() > 0) {
     
     char recieved = Serial1.read();
-<<<<<<< HEAD
+
     if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\s' && recieved != '\e' 
     && recieved != '\f' && recieved != '\g' && recieved != '\h' && recieved != '\i' ) { 
-=======
-    if ( recieved != '\a' && recieved != '\b' && recieved != '\c' && recieved != '\d' && recieved != '\e' 
-    && recieved != '\f' && recieved != '\g') { 
->>>>>>> 8.0 MQTT
+
               
       Serial1_RX_Value = Serial1_RX_Value +  (char)recieved;          
       } 
@@ -1381,11 +1375,9 @@ void Receive_Mower_Running_Data() {
       Bumper_Status = Serial1_RX_Value.toInt();                                 
       Serial1_RX_Value = ""; // changed to string
       } 
-<<<<<<< HEAD
+
       else if (recieved == '\s') {
-=======
-      else if (recieved == '\d') {
->>>>>>> 8.0 MQTT
+
       Mower_Status_Value = Serial1_RX_Value.toInt();                                 
       Serial1_RX_Value = ""; // changed to string
       } 
@@ -1399,7 +1391,7 @@ void Receive_Mower_Running_Data() {
       } 
       else if (recieved == '\g') {
       VoltsTX = Serial1_RX_Value.toInt();                                 
-<<<<<<< HEAD
+
       Serial1_RX_Value = ""; // changed to string
       } 
       else if (recieved == '\h') {
@@ -1408,8 +1400,7 @@ void Receive_Mower_Running_Data() {
       } 
       else if (recieved == '\i') {
       GPS_Lock_OK_TX = Serial1_RX_Value.toInt();                                 
-=======
->>>>>>> 8.0 MQTT
+
       Serial1_RX_Value = ""; // changed to string
       } 
     else Serial.print(F("No Data Received|"));
@@ -1431,15 +1422,12 @@ void Receive_Mower_Running_Data() {
         Serial.print(F("VoltsRX = "));
         if (VoltsTX > 0) Serial.print(Battery);
         else Serial.print("XX.XX");
-<<<<<<< HEAD
         Serial.print(F("|GPS:"));
         if (GPS_In_Out_TX == 1) Serial.print("INSIDE");
         if (GPS_In_Out_TX == 0) Serial.print("OUTSIDE");        
         Serial.print(F("|GPS:"));
         if (GPS_Lock_OK_TX == 1) Serial.print("RTKFIX");
         if (GPS_Lock_OK_TX == 0) Serial.print("No Lock");    
-=======
->>>>>>> 8.0 MQTT
 
 }
 

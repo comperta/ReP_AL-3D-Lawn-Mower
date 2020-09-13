@@ -14,11 +14,6 @@ SoftwareSerial NodeMCU(D2,D3);   //RXD2 TXD3
 
 #define LED D4      // on various NODEMCU boards the LED Pin is different.....
 
-// You should get Auth Token in the Blynk App.
-// Go to the Project Settings (nut icon).
-
-char auth[] = "Blynk Token Number";
-
 ///////////***********MQTT*************////////
 WiFiClient espClient;
 PubSubClient client(espClient);
