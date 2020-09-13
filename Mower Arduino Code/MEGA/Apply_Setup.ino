@@ -88,12 +88,6 @@ void Setup_DFRobot_QMC5883_HMC5883L_Compass() {
 
         /*Setup Compass
         *************************************************************************/
-        if (LCD_Screen_Keypad_Menu == 1) {
-              lcd.clear();
-              lcd.print(F("Compass  "));
-              lcd.setCursor(0, 1);
-              lcd.print(F("Setup"));
-              }
       
         int Compass_Attempt = 0;
         int Compass_Found = 0;

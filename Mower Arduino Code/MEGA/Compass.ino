@@ -8,9 +8,6 @@ void Get_Compass_Reading() {
   // If the Compass is activated
   if (Compass_Activate == 1) {
   
-          // displays a star on the LCD to show compass is being used.
-          if (LCD_Screen_Keypad_Menu == 1) lcd.setCursor(7, 0);
-          if (LCD_Screen_Keypad_Menu == 1) lcd.print("*");
 
           // Gets the compass data depending on which method is selected    
           if (Compass_Detected == 1) Get_DFRobot_HMC5883L_Reading();
@@ -18,8 +15,6 @@ void Get_Compass_Reading() {
           if (Compass_Detected == 3) Get_Manuel_QMC5883_Reading();                                               
           if (Compass_Detected == 4) Get_QMC5883L_Reading();
           
-          if (LCD_Screen_Keypad_Menu == 1) lcd.setCursor(7, 0);
-          if (LCD_Screen_Keypad_Menu == 1) lcd.print("/");
 
           // Set declination angle. Find your location declination on: http://magnetic-declination.com/
           // (+) Positive or (-) for negative,

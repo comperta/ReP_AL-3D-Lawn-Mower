@@ -165,9 +165,10 @@ void Manouver_Mow_The_Grass() {
           GYRO_Steering_Status = 1;        
           Calculate_GYRO_Wheel_Compensation();
           Motor_Action_Dynamic_PWM_Steering();              // Removes the full speed function if the mower is trying to hold to the compass heading.
-          if (LCD_Screen_Keypad_Menu == 1) Print_LCD_Compass_Mowing();
-          Serial.print(F("G-Lock:ON_"));
-          Serial.print("|");
+          #ifdef DEBUG 
+            Serial.print(F("G-Lock:ON_"));
+            Serial.print("|");
+          #endif
           }
         }
       
@@ -996,7 +997,7 @@ void Manouver_Exit_To_Zone_X() {
    //Send_Mower_Tracking_Data();                                  // Comperta already in the next line Send the tracking TX Data package to the mower.   
    Manouver_Mower_Exit_Dock();                                  // Carry out the Exit Dock Manouver
    
-   Manouver_Exit_From_Docking_Station();                         // Move the Mower into position backing out of the docking station
+   //Manouver_Exit_From_Docking_Station();                         // Move the Mower into position backing out of the docking station
    if (Perimeter_Wire_Enabled == 1) {
      Mower_Track_To_Exit = 1;
      TestforBoundaryWire();

@@ -20,17 +20,18 @@ void Special_Move_Into_Garden_Zone_X() {
     SetPins_ToGoForwards();                                         // Get ready to move off
     }
 
-void _Docking_Station() {
+void Manouver_Exit_From_Docking_Station(){
+
     SetPins_ToGoBackwards();                                        // Prepare motors pins to go Backwards
     Motor_Action_GoFullSpeed_Out_Garage();
     #ifdef DEBUG                          // Turn the wheels
-      Serial.print(F("Left Wheel PWM:"));
-      Serial.print(PWM_MaxSpeed_LH);
-      Serial.print("|");
-      Serial.print(F("Right Wheel PWM:"));
-      Serial.println(PWM_MaxSpeed_RH);
-    #endif  
-    delay (4000);                                                   // Backwards time
+    Serial.print(F("Left Wheel PWM:"));
+    Serial.print(PWM_MaxSpeed_LH);
+    Serial.print("|");
+    Serial.print(F("Right Wheel PWM:"));
+    Serial.println(PWM_MaxSpeed_RH);   
+    delay (4000);
+    #endif                                             // Backwards time
     Motor_Action_Stop_Motors;                                       // Stop
 
     if (CCW_Tracking_To_Start == 1) {
@@ -87,7 +88,7 @@ void Specials_Find_Wire_Track()  {
     ADCMan.run();
     UpdateWireSensor();
     delay(20);
-//    PrintBoundaryWireStatus();
+    //PrintBoundaryWireStatus();
     //No_Wire_Found = 0;
     Wire_Find_Attempt = 0;  
 
@@ -98,7 +99,7 @@ void Specials_Find_Wire_Track()  {
       #endif
       ADCMan.run();
       UpdateWireSensor();
-//      PrintBoundaryWireStatus();
+      //PrintBoundaryWireStatus();
       Motor_Action_Stop_Motors();                                                           // Stop all wheel motion
       delay(1000);
       SetPins_ToGoBackwards();                                                              // Set the mower to back up
@@ -109,14 +110,14 @@ void Specials_Find_Wire_Track()  {
         Motor_Action_Go_Full_Speed();                                                       // Go full speed (in this case backwards)
         UpdateWireSensor();                                                                 // Read the wire sensor and see of the mower is now  or outside the wire
         ADCMan.run();
-//        PrintBoundaryWireStatus();                                               
+        //PrintBoundaryWireStatus();                                                          // Prints of the status of the wire sensor readings.
         Wire_Find_Attempt = Wire_Find_Attempt + 1;   // Counts how many loops have passed to find the wire.
         #ifdef DEBUG   // Prints of the status of the wire sensor readings.
           Serial.println("");                                       
           Serial.print(F("No Wire Count Backwards:"));
           Serial.print(Wire_Find_Attempt);
           Serial.print("|");
-        #endif
+        #endif;
         }
       
       }
@@ -140,12 +141,12 @@ void Specials_Find_Wire_Track()  {
         Motor_Action_Stop_Motors();
         delay(1000);  
         SetPins_ToGoForwards();                                                             // Set the motors to move the mower forwards
-        delay(100);                                                                         // resets the cycles
+        delay(100);
         while (( inside != false) && (Wire_Find_Attempt < 100)) {                               // Move the mower forward until mower is outisde/ON the wire fence or 500 cycles have passed
           Motor_Action_Go_Full_Speed();                                                     // Go full speed (in this case forwards)
           UpdateWireSensor();                                                               // Read the wire sensor and see of the mower is now  or outside the wire
           ADCMan.run();
-//          PrintBoundaryWireStatus();                                                        // Prints of the status of the wire sensor readings.
+          //PrintBoundaryWireStatus();                                                        // Prints of the status of the wire sensor readings.
           #ifdef DEBUG
             Serial.println("");
           #endif
