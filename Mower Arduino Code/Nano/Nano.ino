@@ -2,7 +2,7 @@
 //#define DEBUG    //uncomment to activate
 //#define TEST     //uncomment to activate
 
-SoftwareSerial Nano(10, 11);  // RX, TX
+SoftwareSerial mySerial(10, 11);  // RX, TX
 
 //Amp Sensor Variables.
 int RawValueAmp= 0;
