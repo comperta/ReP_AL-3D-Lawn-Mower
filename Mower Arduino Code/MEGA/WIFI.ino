@@ -5,9 +5,16 @@
 
 void Get_WIFI_Commands() {
   Receive_Data_From_NODEMCU(); 
-  delay(5);
-  Transmit_All_To_NODEMCU();
+  delay(5); 
+  Update_APP_Buttons = Update_APP_Buttons + 1;
   
+  if ((Update_APP_Buttons == 4) && ((Mower_Docked == 1) || (Mower_Parked == 1)) )  {
+    for (int i = 0; i <= 3; i++)
+     Transmit_APP_Buttons_Status(); 
+     }
+  else Transmit_All_To_NODEMCU(); 
+  
+  if (Update_APP_Buttons == 15) Update_APP_Buttons = 0;
   }
 
 void Receive_Data_From_NODEMCU() {
@@ -52,23 +59,55 @@ void Transmit_All_To_NODEMCU() {
   delay(5);
   Serial2.println(Tracking_Wire);
   Serial2.println("\m");   
-  
-  //*************
-  
-  //Serial2.print(Mower_Parked_Low_Batt);
-  //Serial2.println("\b");
-    
-  //Serial2.print(Mower_Error);
-  //Serial2.println("\l"); 
-   
-  //Serial2.println(Compass_Heading_Locked);
-  //Serial2.println("\w");
-  
+  delay(5);
+  Serial2.println(Update_APP_Buttons);
+  Serial2.println("\b");   
+  delay(5);   
 
-      
+  Serial.print(F("|BtnS"));
+  Serial.print(Update_APP_Buttons);   
   }
 
 
+void Transmit_APP_Buttons_Status() {
+
+  delay(200);
+  int Compass_Activate_TX = Compass_Activate + 2;
+  int Compass_Heading_Hold_Enabled_TX = Compass_Heading_Hold_Enabled + 2;
+  int GYRO_Enabled_TX = GYRO_Enabled + 2;
+  
+  Serial.println(F(""));
+  Serial.print(F("|Updating APP Buttons"));
+  delay(5);
+  Serial2.print(Compass_Activate_TX);
+  Serial2.println("\h");
+  delay(10);
+  Serial2.print(Compass_Heading_Hold_Enabled_TX);
+  Serial2.println("\r");
+  delay(10);
+  Serial2.print(GYRO_Enabled_TX);
+  Serial2.println("\w");
+  delay(10);
+
+  Serial.print(F("|Compass_Activate:"));
+  Serial.print(Compass_Activate_TX);
+  Serial.print("/");
+  Serial.print(Compass_Activate);
+  Serial.print("|");
+
+  Serial.print(F("Heading Hold:"));
+  Serial.print(Compass_Heading_Hold_Enabled_TX);
+  Serial.print("/");
+  Serial.print(Compass_Heading_Hold_Enabled);  
+  Serial.print("|");  
+
+  
+  Serial.print(F("GYRO:"));
+  Serial.print(GYRO_Enabled_TX);
+  Serial.print("/");
+  Serial.print(GYRO_Enabled);
+  Serial.print("|"); 
+  }
 
 void Execute_Blynk_Command_To_Mower() {
 
@@ -82,7 +121,8 @@ delay(30);
    if (Mower_Docked == 1)   {  
 
    // Update the TFT Display
-   Serial.println(F("Updating TFT of WIFI Command to Exit dock"));
+   Serial.println(F(""));
+   Serial.println(F("Updating TFT Screen: WIFI Command to Exit dock"));
    Exiting_Dock = 1;
    Mower_Error_Value = 0;
    Send_Mower_Docked_Data();                                   // Send the Docked TX Data package to the mower.
@@ -228,6 +268,62 @@ delay(30);
    val_WIFI = 0;   // restes val2 to zero so the command is only executed once
   }
 
+// SETTINGS MOWER
+
+// Compass Setting Via WIFI.
+ if (val_WIFI == 40)  {    
+   Serial.println("");
+   Serial.print(F("WIFI Command: ")); 
+   Serial.print(val_WIFI);
+   Serial.println(F("|Compass ON"));
+   Compass_Activate = 1;
+   val_WIFI = 0;   // restes val2 to zero so the command is only executed once
+  }
+ if (val_WIFI == 41)  {    
+   Serial.println("");
+   Serial.print(F("WIFI Command: ")); 
+   Serial.print(val_WIFI);
+   Serial.println(F("|Compass OFF"));
+   Compass_Activate = 0;
+   val_WIFI = 0;   // restes val2 to zero so the command is only executed once
+  }
+
+// Heading Hold
+ if (val_WIFI == 42)  {    
+   Serial.println("");
+   Serial.print(F("WIFI Command: ")); 
+   Serial.print(val_WIFI);
+   Serial.println(F("|Heading Hold ON"));
+   Compass_Heading_Hold_Enabled = 1;
+   val_WIFI = 0;   // restes val2 to zero so the command is only executed once
+  }
+ if (val_WIFI == 43)  {    
+   Serial.println("");
+   Serial.print(F("WIFI Command: ")); 
+   Serial.print(val_WIFI);
+   Serial.println(F("|Heading Hold OFF"));
+   Compass_Heading_Hold_Enabled = 0;
+   val_WIFI = 0;   // restes val2 to zero so the command is only executed once
+  }
+
+// GYRO
+ if (val_WIFI == 44)  {    
+   Serial.println("");
+   Serial.print(F("WIFI Command: ")); 
+   Serial.print(val_WIFI);
+   Serial.println(F("|GYRO ON"));
+   GYRO_Enabled = 1;
+   val_WIFI = 0;   // restes val2 to zero so the command is only executed once
+  }
+ if (val_WIFI == 45)  {    
+   Serial.println("");
+   Serial.print(F("WIFI Command: ")); 
+   Serial.print(val_WIFI);
+   Serial.println(F("|GYRO OFF"));
+   GYRO_Enabled = 0;
+   val_WIFI = 0;   // restes val2 to zero so the command is only executed once
+  }
+
 }
 
 void Execute_Manuel_Blynk_Command_To_Mower() {
@@ -288,3 +384,31 @@ void Execute_Manuel_Blynk_Command_To_Mower() {
   }
   
 }
+
+
+void Update_Blynk_Start_Conditions() {
+
+  Serial2.print(Compass_Activate);
+  Serial2.println("\a");
+  delay(5);
+  Serial2.print(Loop_Cycle_Mowing);
+  Serial2.println("\b");
+  delay(5);
+  Serial2.print(Mower_Docked);
+  Serial2.println("\c");
+  delay(5);
+  Serial2.print(Mower_Running);
+  Serial2.println("\d");
+  delay(5);
+  Serial2.print(Mower_Parked);
+  Serial2.println("\e");
+  delay(5);
+  Serial2.println(Charging);
+  Serial2.println("\f");
+  delay(5);
+  Serial2.println(Tracking_Wire);
+  Serial2.println("\g"); 
+
+  
+
+} 

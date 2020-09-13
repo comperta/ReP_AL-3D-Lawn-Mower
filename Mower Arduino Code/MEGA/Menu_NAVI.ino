@@ -131,8 +131,8 @@ void Activate_Menu_Option_NAVI() {
                EEPROM.write(20 , Compass_Activate);
                if (Compass_Activate == 1)   {
                    if (Compass_Setup_Mode == 1) Setup_DFRobot_QMC5883_HMC5883L_Compass();   // USes the DFRobot Library
-                   if (Compass_Setup_Mode == 2) Setup_Manuel_QMC5883_Compass();             // Uses manual i2C address
-                   if (Compass_Setup_Mode == 3) Setup_QMC5883L_Compass;                     // Uses QMC5883L Library               
+                   if (Compass_Setup_Mode == 2) Setup_DFRobot_QMC5883_HMC5883L_Compass();   // Uses manual i2C address
+                   if (Compass_Setup_Mode == 3) Setup_DFRobot_QMC5883_HMC5883L_Compass();   // Uses QMC5883L Library               
                    Menu_Mode_Selection = 0;
                    }
              }

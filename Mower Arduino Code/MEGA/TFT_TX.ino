@@ -1041,8 +1041,9 @@ void Send_Mower_Error_Data() {
 
 void Send_Mower_Running_Data() {
         int Delay_running = 200;
-
-        Serial.println("|TFT_Data Running Turn Point");
+        
+        Serial.println(F(""));
+        Serial.println(F("Updating TFT Screen: Turn Point"));
        
         Serial3.print(Sonar_Status);
         Serial3.println(F("\a"));        
@@ -1100,10 +1101,10 @@ void Send_Mower_Running_Data() {
         Serial.print(F("|Tip:"));
         Serial.print(Tilt_Angle_Sensed);     
         Serial.print(F("|VTX:"));
-        Serial.println(VoltsTX);          
+        Serial.print(VoltsTX);          
         Serial.print(F("|GPS Inside Fence:"));
-        if (GPS_Inside_Fence == 0) Serial.println("OUT");           
-        if (GPS_Inside_Fence == 1) Serial.println("IN");
+        if (GPS_Inside_Fence == 0) Serial.print("OUT");           
+        if (GPS_Inside_Fence == 1) Serial.print("IN");
         Serial.print(F("|GPS Lock:"));
         if (GPS_Lock_OK == 0) Serial.println("No lock");           
         if (GPS_Lock_OK == 1) Serial.println("RTK FIX");
@@ -1115,11 +1116,6 @@ void Send_Wheel_Amp_Data() {
         Serial3.print(Wheel_Blocked);      
         Serial3.println("\a");
         delay(300);
-
-      
-        Serial.print(F("Wheel Status: "));
-        if (Wheel_Blocked == 4) Serial.println("Blocked");
-        if (Wheel_Blocked == 0) Serial.println("- - - -");
         }
 
 
@@ -1164,8 +1160,7 @@ void Send_Mower_Docked_Data()  {
         Serial.print(F("|C:"));
         Serial.print(Charging); 
         Serial.print(F("|LOCK:"));
-        Serial.print(GPS_Lock_OK);         
-        
+        Serial.print(GPS_Lock_OK);            
         } 
 
 void Calculate_TFT_Mower_Status_Value() {

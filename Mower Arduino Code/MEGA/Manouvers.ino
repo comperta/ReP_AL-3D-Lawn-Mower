@@ -16,8 +16,10 @@ void Manouver_Mow_The_Grass() {
     Serial.print(F("Loop:"));
     Serial.print(Loop_Cycle_Mowing);
     Serial.print(F("|"));
-    lcd.setCursor(13, 1);
-    lcd.print(Loop_Cycle_Mowing);
+    if (LCD_Screen_Keypad_Menu == 1)  {
+      lcd.setCursor(13, 1);
+      lcd.print(Loop_Cycle_Mowing);
+      }
     delay(1);
   
   if (Loop_Cycle_Mowing < 5  )  {                       
@@ -294,7 +296,7 @@ void Manouver_Find_Wire_Track()  {
         cycle = 0;                                                                              // resets the cycles
         
         // Move the mower forwards until the wire is detected and the mower is then outside the wire
-        while (( inside != false) && (No_Wire_Found_Fwd == 0) && (Mower_Parked ==0) ) {             // Move the mower forward until mower is outisde/ON the wire fence or 500 cycles have passed
+        while (( inside != false) && (No_Wire_Found_Fwd == 0) && (Mower_Parked == 0) ) {             // Move the mower forward until mower is outisde/ON the wire fence or 500 cycles have passed
           Loop_Cycle_Mowing = 111;                                                              // Displays 111 in the APP
           cycle = cycle + 1;
           lcd.setCursor(0,1);
@@ -453,12 +455,17 @@ void Manouver_Find_Wire_Track()  {
 
 void Manouver_Turn_Around() {
     Motor_Action_Stop_Motors(); 
+    if ((WIFI_Enabled == 1) && (Manuel_Mode == 0)) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
+    delay(100);
+    
+    Serial.println(F(""));
     Serial.println(F(""));
     if (Outside_Wire == 1)     Serial.println(F("Mower is Outside the Wire"));
     if (GPS_Inside_Fence == 0) Serial.println(F("Mower is Outside the GPS Fence"));
     if (Wheel_Blocked == 4)    Serial.println(F("Mower Wheels are jammed"));
+    if (TFT_Screen_Menu == 1)  Send_Mower_Running_Data();          // Update TFT Screen
+
     Serial.println(F("Mower is Turning"));
-    if (TFT_Screen_Menu == 1) Send_Mower_Running_Data();          // Update TFT Screen
     Serial.println(F(""));
     delay(80);
 
@@ -516,6 +523,7 @@ void Manouver_Turn_Around() {
                       //Motor_Action_Go_Full_Speed();
                       //delay(300);
                       Motor_Action_Stop_Motors();
+                      if ((WIFI_Enabled == 1) && (Manuel_Mode == 0)) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
                       delay(20);
                       TestforBoundaryWire();  
                       delay(80);
@@ -598,10 +606,12 @@ void Manouver_Turn_Around_Sonar() {
       }
   
   Motor_Action_Stop_Motors();
+  if ((WIFI_Enabled == 1) && (Manuel_Mode == 0)) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
   Compass_Heading_Locked = 0;
   Sonar_Hit = 0;
   Loop_Cycle_Mowing = 0;
   Sonar_Status = 0;
+  Wheel_Blocked = 0;
   if (TFT_Screen_Menu == 1) Send_Mower_Running_Data();          // Update TFT Screen 
   Serial.println(F("Mower Turned Around"));
   Serial.println(F(""));
@@ -666,8 +676,9 @@ void Manouver_Mower_Exit_Dock() {
   Exiting_Dock          = 1;  
   Mower_Status_Value    = 9;
   //Calculate_TFT_Mower_Status_Value();    // Mower Status Value is already given in above line.
-  
+  Serial.println(F(""));
   Serial.println(F("Updating TFT with Exit Dock Information"));
+  Serial.println(F(""));
   Send_Mower_Tracking_Data();         // Send docked numbers to break out of the cycle and change it to mower exiting dock mode.
   Serial.println(F(""));// Send Command to the TFT
   if (WIFI_Enabled == 1) Get_WIFI_Commands();   // Command WIFI

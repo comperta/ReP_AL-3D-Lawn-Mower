@@ -48,7 +48,7 @@ void Calculate_GYRO_Wheel_Compensation() {
   int GYRO_Error_X = 0;
   
   if (GYRO_Angle_X > 180) GYRO_Error_X = (360 - GYRO_Angle_X);        // Calculates the error in compass heading from the saved lock heading
-  if (GYRO_Angle_X < 180) GYRO_Error_X = GYRO_Angle_X;        // Calculates the error in compass heading from the saved lock heading
+  if (GYRO_Angle_X <= 180) GYRO_Error_X = GYRO_Angle_X;        // Calculates the error in compass heading from the saved lock heading
 
   
   // Mower is tipping to the Left

@@ -69,9 +69,9 @@ void Get_Manuel_QMC5883_Reading() {
 
 
 void Get_QMC5883L_Reading() {
-    int x, y, z;
-    Heading = compass2.readHeading();
-    Heading = atan2(y, x);                          //Calculate Heading in Radians.
+
+    Serial.println(F("Use DF Robot and GY282"));
+   
     }
 
 
@@ -343,8 +343,8 @@ void Calculate_Compass_Wheel_Compensation() {
 
   float Compass_Error = Compass_Heading_Degrees - Heading_Lock;        // Calculates the error in compass heading from the saved lock heading
   
-  if (Compass_Error > 180) Compass_Error = Compass_Error * - 1 ;
-  if (Compass_Error < -180) Compass_Error = Compass_Error * - 1 ;
+  if (Compass_Error >= 180) Compass_Error = Compass_Error * - 1 ;
+  if (Compass_Error <= -180) Compass_Error = Compass_Error * - 1 ;
   Serial.print(F("C_Err:"));
   Serial.print(Compass_Error);
   Serial.print(F("|"));

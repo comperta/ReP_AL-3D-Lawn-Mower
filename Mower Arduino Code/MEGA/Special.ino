@@ -7,7 +7,9 @@ void Special_Cut_Under_Trampoline_Function() {
 // after wire tracking the code to bering the mower to a sensible position away from the wire
 // This poart of the code should eb modified to fit your garden needs
 void Special_Move_Into_Garden_Zone_X() {
-    Serial.println(F("start mower code here"));
+    Serial.println(F(""));
+    Serial.println(F("Arrived at Exit Zone"));
+    Serial.println(F(""));
     Motor_Action_Stop_Motors();                                     // Stop the wheel motors
     if (CCW_Tracking_To_Start == 1) SetPins_ToTurnLeft();           // Turn left
     if (CW_Tracking_To_Start == 1) SetPins_ToTurnRight();           // Turn Right
@@ -15,6 +17,9 @@ void Special_Move_Into_Garden_Zone_X() {
     delay(1400);                                                     // Turn left for 0.7seconds
     Motor_Action_Stop_Motors();                                     // Stop the wheel motors.
     SetPins_ToGoForwards();                                         // Get ready to move off
+    Serial.println(F(""));
+    Serial.println(F("Stating to Mow!! "));   
+    Serial.println(F(""));
     }
 
 void Manouver_Exit_From_Docking_Station(){
@@ -99,6 +104,8 @@ void Specials_Find_Wire_Track()  {
       UpdateWireSensor();
       PrintBoundaryWireStatus();
       Motor_Action_Stop_Motors();                                                           // Stop all wheel motion
+      Loop_Cycle_Mowing = 0;
+      if ((WIFI_Enabled == 1) && (Manuel_Mode == 0)) Get_WIFI_Commands();    
       delay(1000);
       SetPins_ToGoBackwards();                                                              // Set the mower to back up
       delay(100);
@@ -124,6 +131,8 @@ void Specials_Find_Wire_Track()  {
       }
       
       Motor_Action_Stop_Motors();
+      Loop_Cycle_Mowing = 999;
+      if ((WIFI_Enabled == 1) && (Manuel_Mode == 0)) Get_WIFI_Commands();  
       delay(5);
       }
     
@@ -136,6 +145,8 @@ void Specials_Find_Wire_Track()  {
         Serial.println(F("CODE POSITION - MOTOR FORWARDS LOOP:  If statements"));
         PrintBoundaryWireStatus();
         Motor_Action_Stop_Motors();
+        Loop_Cycle_Mowing = 999;
+        if ((WIFI_Enabled == 1) && (Manuel_Mode == 0)) Get_WIFI_Commands();  
         delay(1000);  
         SetPins_ToGoForwards();                                                             // Set the motors to move the mower forwards
         delay(100);
@@ -157,6 +168,8 @@ void Specials_Find_Wire_Track()  {
           }
       }
       Motor_Action_Stop_Motors();
+      Loop_Cycle_Mowing = 0;
+      if ((WIFI_Enabled == 1) && (Manuel_Mode == 0)) Get_WIFI_Commands();  
       delay(5);
     }
   

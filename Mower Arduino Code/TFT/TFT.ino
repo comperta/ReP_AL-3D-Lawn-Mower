@@ -181,7 +181,7 @@ int Bar_Width;
 int Button_W;
 int LH_RH_Spacing;
 
-int Wheel_Amp_Sensor_ON;
+int   Wheel_Amp_Sensor_ON;
 float Max_Wheel_Amps;
 
 
@@ -191,8 +191,8 @@ float Max_Wheel_Amps;
   bool CCW_Tracking_To_Charge;     
   bool CW_Tracking_To_Start;   
   bool CCW_Tracking_To_Start;
-  int Track_Wire_Zone_1_Cycles;
-  int Track_Wire_Zone_2_Cycles;
+  int  Track_Wire_Zone_1_Cycles;
+  int  Track_Wire_Zone_2_Cycles;
   int  Max_Tracking_Turn_Right;
   int  Max_Tracking_Turn_Left; 
   int  Max_Cycle_Wire_Find;    
@@ -200,14 +200,14 @@ float Max_Wheel_Amps;
   int  Home_Wire_Compass_Heading;
   float P;  
   
-  bool Compass_Activate;
-  bool Compass_Heading_Hold_Enabled;
+  bool  Compass_Activate;
+  bool  Compass_Heading_Hold_Enabled;
   float CPower;
 
 //Compass
-int   Compass_Heading_Degrees;
-float   Heading;
-int Compass_Setup_Mode;
+int    Compass_Heading_Degrees;
+float  Heading;
+int    Compass_Setup_Mode;
 
   int Pos_X1;
   int Pos_Y1;

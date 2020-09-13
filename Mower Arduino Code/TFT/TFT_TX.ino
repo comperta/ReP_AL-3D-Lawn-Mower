@@ -26,22 +26,22 @@ void Transmit_Save_Sonar_Values() {
       delay(200);
 
 
-      Serial.print(F("Sonar 2 Activated = "));
+      Serial.print(F("S2 Activated = "));
       Serial.println(Sonar_2_Activate);
-      Serial.print(F("Sonar 1 Activated = "));
+      Serial.print(F("S1 Activated = "));
       Serial.println(Sonar_1_Activate);
-      Serial.print(F("Sonar 3 Activated = "));
+      Serial.print(F("S3 Activated = "));
       Serial.println(Sonar_3_Activate);
-      Serial.print(F("Sonar Max Distance = "));
+      Serial.print(F("SMax Distance = "));
       Serial.println(maxdistancesonar);
-      Serial.print(F("Sonar Sensitivity = "));
+      Serial.print(F("S Sens'y = "));
       Serial.println(Max_Sonar_Hit);
   
 }
 
 
 void  Transmit_Saved_Battery_Values() {
-      Serial.println("TX Battery");
+      Serial.println("TX Batt");
       
       Serial1.print(Battery_Min * 10);     // *100 to make a float value volts 12.6 into an int 126
       Serial1.println("\a");
@@ -51,9 +51,9 @@ void  Transmit_Saved_Battery_Values() {
       Serial1.println("\b");
       delay(200);  
 
-      Serial.print(F("Battery Min = "));
+      Serial.print(F("Batt Min = "));
       Serial.println(Battery_Min);
-      Serial.print(F("Battery Sensitivity = "));
+      Serial.print(F("Batt Sens'y = "));
       Serial.println(Low_Battery_Instances_Chg);      
       }
 
@@ -77,11 +77,11 @@ void Transmit_Sensor_Menu1_Values() {
       delay(200);  
 
 
-      Serial.print(F("Wire Module Activated = "));
+      Serial.print(F("Wire ON = "));
       Serial.println(Perimeter_Wire_Enabled);
-      Serial.print(F("WIFI Enabled = "));
+      Serial.print(F("WIFI ON = "));
       Serial.println(WIFI_Enabled);
-      Serial.print(F("Bumper Activated = "));
+      Serial.print(F("Bumper ON = "));
       Serial.println(Bumper_Activate_Frnt);
       }
 
@@ -97,9 +97,9 @@ void Transmit_Saved_Rain_Sensor_Values () {
       Serial1.println("\b");
       delay(200);  
 
-      Serial.print(F("Rain Sensor ON/OFF = "));
+      Serial.print(F("Rain ON/OFF = "));
       Serial.println(Rain_Sensor_Installed);
-      Serial.print(F("Rain Sensor Sensitivity = "));
+      Serial.print(F("Rain Sensy = "));
       Serial.println(Rain_Total_Hits_Go_Home);
       }
 
@@ -127,13 +127,13 @@ void Transmit_Wheel_Motor_Values() {
       Serial1.println("\e");
       delay(200);  
             
-      Serial.print(F("Wheel Motor PWM LH = "));
+      Serial.print(F("Wheel PWM LH = "));
       Serial.println(PWM_MaxSpeed_LH);
-      Serial.print(F("Wheel Motor PWM RH = "));
+      Serial.print(F("Wheel PWM RH = "));
       Serial.println(PWM_MaxSpeed_RH);
-      Serial.print(F("Wheel Motor Slow Speed PWM LH = "));
+      Serial.print(F("Wheel Slow PWMLH = "));
       Serial.println(PWM_Slow_Speed_LH);
-      Serial.print(F("Wheel Motor Slow Speed PWM RH = "));
+      Serial.print(F("Wheel Slow PWMRH = "));
       Serial.println(PWM_Slow_Speed_RH);
       Serial.print(F("Slow Speed MAG = "));
       Serial.println(Slow_Speed_MAG);
@@ -151,9 +151,9 @@ void Transmit_Blade_Motor_Values() {
       Serial1.println("\b");
       delay(200);  
       
-      Serial.print(F("Blade Motor PWM = "));
+      Serial.print(F("Blade PWM = "));
       Serial.println(PWM_Blade_Speed);
-      Serial.print(F("Cutting Blade Activated = "));
+      Serial.print(F("Blade ON = "));
       Serial.println(Cutting_Blades_Activate);
       Serial.println(F(" "));
       }
@@ -194,15 +194,15 @@ void Transmit_Save_Movement_Values() {
       Max_Cycles_Straight = Max_Cycles_Straight;
       Serial.println(Max_Cycles_Straight);
       
-      Serial.print(F("Turn Angle Min = "));
+      Serial.print(F("Turn° Min = "));
       Mower_Turn_Delay_Min = Mower_Turn_Delay_Min;
       Serial.println(Mower_Turn_Delay_Min);
       
-      Serial.print(F("Turn Angle Max = "));
+      Serial.print(F("Turn° Max = "));
       Mower_Turn_Delay_Max = Mower_Turn_Delay_Max;
       Serial.println(Mower_Turn_Delay_Max);
       
-      Serial.print(F("Reverse Distance = "));
+      Serial.print(F("R Distance = "));
       Mower_Reverse_Delay = Mower_Reverse_Delay;
       Serial.println(Mower_Reverse_Delay);
       }
@@ -223,25 +223,25 @@ void Transmit_Saved_Tracking_Exit_Values() {
       Serial1.println("\c");
       delay(200);  
 
-      Serial.print(F("Track Wire Zone 1 = "));
+      Serial.print(F("Zone 1 = "));
       Serial.println(Track_Wire_Zone_1_Cycles);      
-      Serial.print(F("Track Wire Zone 2 = "));
+      Serial.print(F("Zone 2 = "));
       Serial.println(Track_Wire_Zone_2_Cycles);
       
       if (CCW_Tracking_To_Start == 0) {
         CW_Tracking_To_Start = 1;
         CCW_Tracking_To_Charge = 1;
         CW_Tracking_To_Charge = 0;
-        Serial.println(F("Tracking to Charge = CCW"));
-        Serial.println(F("Tracking to Start = CW"));
+        Serial.println(F("Track to Charge = CCW"));
+        Serial.println(F("Track to Start = CW"));
         }
         
       if (CCW_Tracking_To_Start == 1) {
         CW_Tracking_To_Start = 0;
         CCW_Tracking_To_Charge = 0;
         CW_Tracking_To_Charge = 1;      
-        Serial.println(F("Tracking to Charge = CW"));
-        Serial.println(F("Tracking to Start = CCW"));        
+        Serial.println(F("Track to Charge = CW"));
+        Serial.println(F("Track to Start = CCW"));        
         }  
       }
 
@@ -260,13 +260,13 @@ void Transmit_Saved_Tracking_Find_Wire_Values() {
       Serial1.println("\c");
       delay(200);  
 
-      Serial.print(F("Wire Find Forwards / cylces = "));
+      Serial.print(F("Wire Find Forwards= "));
       Serial.println(Max_Cycle_Wire_Find);
       
-      Serial.print(F("Wire Find Backwards / cylces = "));
+      Serial.print(F("Wire Find Backwards= "));
       Serial.println(Max_Cycle_Wire_Find_Back);
       
-      Serial.print(F("Home Compass Heading / degrees "));
+      Serial.print(F("Home Compass Heading°"));
       Serial.println(Home_Wire_Compass_Heading);      
       }
 
@@ -278,7 +278,7 @@ void  Transmit_Tracking_Menu_Values() {
       Serial1.println("\a");
       delay(300); 
       
-      Serial.print(F("Use Charging Station = "));
+      Serial.print(F("Docking ON = "));
       Serial.println(Use_Charging_Station); 
       } 
 
@@ -297,9 +297,9 @@ void Transmit_Saved_Tracking_PID_Values() {
       Serial1.println("\c");
       delay(200);  
 
-      Serial.print(F("Max Cycles Left Wheel = "));
+      Serial.print(F("Max Cycles LWheel = "));
       Serial.println(Max_Tracking_Turn_Left);
-      Serial.print(F("Max Cyckes Right Wheel = "));
+      Serial.print(F("Max Cycles RWheel = "));
       Serial.println(Max_Tracking_Turn_Right);         
       Serial.print(F("PID P = "));
       Serial.println(P);
@@ -325,13 +325,13 @@ void Transmit_Compass_Menu_Values() {
       Serial1.println("\d");
       delay(300); 
 
-      Serial.print(F("Compass Activated = "));
+      Serial.print(F("Compass ON = "));
       Serial.println(Compass_Activate);
-      Serial.print(F("Heading Hold Enabled = "));
+      Serial.print(F("HHold ON= "));
       Serial.println(Compass_Heading_Hold_Enabled);   
-      Serial.print(F("Compass Power = "));
+      Serial.print(F("C-Power = "));
       Serial.println(CPower);    
-      Serial.print(F("Compass Setup Mode = "));
+      Serial.print(F("C-Setup Mode = "));
       Serial.println(Compass_Setup_Mode); 
 
 }
@@ -363,7 +363,7 @@ void Transmit_Navigation_Menu_Values() {
       Serial1.println("\a");
       delay(200);  
 
-      Serial.print(F("GPS Enabled = "));
+      Serial.print(F("GPS ON = "));
       Serial.println(GPS_Enabled);   
       }
 
@@ -371,7 +371,7 @@ void Transmit_Navigation_Menu_Values() {
       
 
 void Transmit_Save_Alarm1_Values() {
-      Serial.println("TX Alarm1");
+      Serial.println("TX A1");
       
       Serial1.print(Alarm_1_ON);
       Serial1.println("\a");
@@ -411,7 +411,7 @@ void Transmit_Save_Alarm1_Values() {
 
 
 void Transmit_Save_Alarm2_Values() {
-      Serial.println("TX Alarm2");
+      Serial.println("TX A2");
       
       Serial1.print(Alarm_2_ON);
       Serial1.println("\a");
@@ -449,7 +449,7 @@ void Transmit_Save_Alarm2_Values() {
       }
 
 void Transmit_Save_Alarm3_Values() {
-      Serial.println("TX Alarm3");
+      Serial.println("TX A3");
       
       Serial1.print(Alarm_3_ON);
       Serial1.println("\a");
@@ -529,18 +529,18 @@ void   Transmit_Saved_Pattern_Values() {
       delay(300);          
       
       
-      Serial.print(F("Pattern Mow"));
+      Serial.print(F("P-Mow"));
       if (Pattern_Mow == 0) Serial.println("OFF");
       if (Pattern_Mow == 1) Serial.println("Parallel");  
       if (Pattern_Mow == 3) Serial.println("Spiral"); 
       
-      Serial.print(F("Turn 90° LH= "));
+      Serial.print(F("Turn90° LH= "));
       Serial.println(Turn_90_Delay_LH);
       
-      Serial.print(F("Turn 90° RH= "));
+      Serial.print(F("Turn90° RH= "));
       Serial.println(Turn_90_Delay_RH);
       
-      Serial.print(F("Distance to next row= "));
+      Serial.print(F("Row Space= "));
       Serial.println(Move_to_next_line_delay);
       
       Serial.print(F("Row Length= "));
@@ -560,9 +560,9 @@ void Transmit_Mower_Start_Conditions_Exit_Dock() {
       Serial1.println("\b");
       delay(200);  
 
-      Serial.print(F("Exit Zone Selected = "));
+      Serial.print(F("Exit Zone = "));
       Serial.println(Exit_Zone);
-      Serial.print(F("Mow Time Selected = "));
+      Serial.print(F("Mow Time = "));
       if ( (Mow_Time == 1) || (Mow_Time == 2 ) ){
           Serial.print(Mow_Time);
           Serial.println(" hrs");
@@ -580,9 +580,9 @@ void Transmit_Mower_Start_Conditions_Quick_Start() {
       Serial1.println("\a");
       delay(200);  
 
-      Serial.println(F("Quick Start Selected"));
+      Serial.println(F("Quick Start: "));
       Serial.println(Exit_Zone);
-      Serial.print(F("Mow Time Selected = "));
+      Serial.print(F("Mow Time = "));
       if ( (Mow_Time == 1) || (Mow_Time == 2 ) ){
           Serial.print(Mow_Time);
           Serial.println(" hrs");
@@ -603,9 +603,9 @@ void Transmit_Saved_Tip_Sensor_Values() {
       Serial1.println("\b");
       delay(200);  
       
-      Serial.print(F("Tilt Angle Sensor = "));
+      Serial.print(F("Tilt° Sensor = "));
       Serial.println(Angle_Sensor_Enabled);
-      Serial.print(F("Tip Over Sensor = "));
+      Serial.print(F("Flip Sensor = "));
       Serial.println(Tip_Over_Sensor_Enabled);
       Serial.println(F(" "));
       }
@@ -622,7 +622,7 @@ void Transmit_Saved_Wheel_Block_Values() {
       Serial1.println("\b");
       delay(200);  
     
-    Serial.print(F("Wheel Amp ON: "));
+    Serial.print(F("Wheel Amp: "));
         if (Wheel_Amp_Sensor_ON == 1) Serial.println("ON");
         if (Wheel_Amp_Sensor_ON == 0) Serial.println("OFF");
     

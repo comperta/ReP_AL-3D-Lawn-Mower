@@ -46,10 +46,6 @@ AlarmId id;
 //Compass Setup
 #include <DFRobot_QMC5883.h>
 DFRobot_QMC5883 compass;
-#include <QMC5883L.h>
-QMC5883L compass2;
-
-//Pin setup for Arduino MEGA
 
 //Perimeter Wire Pins
 #define pinPerimeterLeft A5        // perimeter pin normally A5
@@ -210,6 +206,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   int   Rain_Detected;
   int   Rain_Hit_Detected = 0;
   int   Charging;
+  
   //float Battery_Voltage_Last;
   float Amps_Last;
   int   Volts_Outside_Reading;
@@ -356,6 +353,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
   //WIFI Variables
   float val_WIFI;
+  int Update_APP_Buttons;
 
   // TFT
   int  TFT_Menu_Command; 
@@ -369,6 +367,8 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   int    RawWheelAmp;
   int    Wheel_Blocked;
   float  WheelAmps;
+  int    Wheel_Blocked_Count;
+  
 
  
 /***********************************************************************************************
@@ -387,7 +387,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
 ****************************************************************************************************/
 
-  char Version[16] = "V8.8";
+  char Version[16] = "V8.9";
 
   bool TFT_Screen_Menu            = 1;                          // Set to 1 to use TFT  and 0 when not used
   bool LCD_Screen_Keypad_Menu     = 0;                          // Set to 1 to use LCD  and 0 when not used
@@ -416,14 +416,14 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   int Max_Cycle_Wire_Find_Back    = 50;     //EEPROM            // Maximum number of Backward tracking cycles in finding wire before the mower restarts a compass turn and wire find.  
 
   //Compass Settings
-  int  Compass_Setup_Mode             = 2;                      // 1 to use DFRobot Library   2 to use Manual access code.  3 MechaQMC Library
+  int  Compass_Setup_Mode             = 1;                      // 1 to use DFRobot Library   2 to use Manual access code.  3 MechaQMC Library
   bool Compass_Activate               = 0;       //EEPROM       // Turns on the Compass (needs to be 1 to activate further compass features)
   bool Compass_Heading_Hold_Enabled   = 1;       //EEPROM       // Activates the compass heading hold function to keep the mower straight
   int  Home_Wire_Compass_Heading      = 110;     //EEPROM       // Heading the Mower will search for the wire once the mowing is completed.
   float CPower                        = 2;       //EEPROM       // Magnification of heading to PWM - How strong the mower corrects itself in Compass Mowing
 
   // GYRO Settings
-  bool GYRO_Enabled                   = 1;      // EEPROM       // Enable the GYRO - Automatically activates the GYRO heading hold               
+  bool GYRO_Enabled                   = 0;      // EEPROM       // Enable the GYRO - Automatically activates the GYRO heading hold               
   float GPower                        = 3;      // EEPROM       // Magnification of heading to PWM - How strong the mower corrects itself in Compass Mowing
   
   // Pattern Mow
@@ -465,7 +465,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   bool Bumper_Activate_Frnt       = 0;      //EEPROM            // Activates the bumper bar on the front facia - defualt is off.  Enable in the LCD settings menu.
 
   //Wheel Motors Setup
-  int Max_Cycles_Straight        = 150;     //EEPROM            // Number of loops the Sketch will run before the mower just turns around anyway. Adjust according to your garden length
+  int Max_Cycles_Straight        = 250;     //EEPROM            // Number of loops the Sketch will run before the mower just turns around anyway. Adjust according to your garden length
   int PWM_MaxSpeed_LH            = 240;     //EEPROM            // Straight line speed LH Wheel (Looking from back of mower)  Will be overidden if saved in EEPROM
   int PWM_MaxSpeed_RH            = 255;     //EEPROM            // Straight line speed RH Wheel - adjust to keep mower tracking straight.  Will be overridden if saved in EEPROM
 
@@ -479,7 +479,8 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
   int Mower_Reverse_Delay        = 1800;    //EEPORM            // Time the mower reverses before making a turn.
 
   bool Wheel_Amp_Sensor_ON       = 0;                           // Measures the amps in the wheel motor to detect blovked wheels.
-  float Max_Wheel_Amps           = 1.8;                         // Maximum amperage allowed in the wheels before a blockage is called.
+  float Max_Wheel_Amps           = 3.5;                         // Maximum amperage allowed in the wheels before a blockage is called.
+  int  Wheel_Blocked_Count_Max   = 3;                           // Number of times the wheels blocked are sensed before a reverse action takes place.
 
       
 
@@ -587,8 +588,8 @@ Compass_Activate = 1;
   Prepare_Mower_from_Settings();
   if (LCD_Screen_Keypad_Menu == 1)  Setup_Run_LCD_Intro ();
   if (Compass_Setup_Mode == 1)      Setup_DFRobot_QMC5883_HMC5883L_Compass();   // USes the DFRobot Library
-  if (Compass_Setup_Mode == 2)      Setup_Manuel_QMC5883_Compass();             // Uses manual i2C address
-  if (Compass_Setup_Mode == 3)      Setup_QMC5883L_Compass();                   // Uses QMC5883L Library
+  if (Compass_Setup_Mode == 2)      Setup_DFRobot_QMC5883_HMC5883L_Compass();   // USes the DFRobot Library
+  if (Compass_Setup_Mode == 3)      Setup_DFRobot_QMC5883_HMC5883L_Compass();   // USes the DFRobot Library
   Setup_Gyro();
   delay(100);
   Setup_Relays();
@@ -656,7 +657,7 @@ if ((Mower_Running == 1) && (LCD_Screen_Keypad_Menu == 1))                      
 if  (Mower_Running == 1)                                                                                                  Check_Timed_Mow();                  // Check to see if the time to go home has come.
 if  (Mower_Running == 1)                                                                                                  TestforBoundaryWire();              // Test is the boundary wire is live
 if  (Mower_Running == 1)                                                                                                  Check_Tilt_Tip_Angle();             // Tests to see if the mower is overturned.
-if  ((Mower_Running == 1) && (Wheel_Amp_Sensor_ON == 1) )                                                                 Check_Wheel_Amps();                 // Tests to see if the wheels are blocked.
+if ((Mower_Running == 1) && (Wheel_Amp_Sensor_ON == 1) )                                                                  Check_Wheel_Amps();                 // Tests to see if the wheels are blocked.
 if ((Mower_Running == 1) && (Wire_Detected == 1))                                                                         Check_Wire_In_Out();                // Test if the mower is in or out of the wire fence.
 if ((Mower_Running == 1) && (GPS_Enabled == 1))                                                                           Check_GPS_In_Out();                 // Test is the GPS Fence has been crossed
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0))                                                  Check_Sonar_Sensors();              // If the mower is  the boundary wire check the sonars for obsticles and prints to the LCD

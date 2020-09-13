@@ -74,8 +74,8 @@ void Print_Compass_Menu() {
     Pos_Y4 = Pos_Y3 + Offset_Btn + (0.5 * Button_H);
     
     if (Compass_Setup_Mode == 1) Comp_Mode_btn.initButton(&tft, Pos_X4, Pos_Y4, Button_W, Button_H, WHITE, RED, WHITE, "DFRobot", 2);
-    if (Compass_Setup_Mode == 2) Comp_Mode_btn.initButton(&tft, Pos_X4, Pos_Y4, Button_W, Button_H, WHITE, YELLOW, BLACK, "Manuel", 2);
-    if (Compass_Setup_Mode == 3) Comp_Mode_btn.initButton(&tft, Pos_X4, Pos_Y4, Button_W, Button_H, WHITE, BLUE, WHITE, "HMC5883L", 2);
+    if (Compass_Setup_Mode == 2) Comp_Mode_btn.initButton(&tft, Pos_X4, Pos_Y4, Button_W, Button_H, WHITE, YELLOW, BLACK, "DfRobot 2", 2);
+    if (Compass_Setup_Mode == 3) Comp_Mode_btn.initButton(&tft, Pos_X4, Pos_Y4, Button_W, Button_H, WHITE, BLUE, WHITE, "DFRobot 3", 2);
     
     Comp_Mode_btn.drawButton(false);
 
@@ -237,14 +237,14 @@ void React_to_Button_Press_Compass() {
         if (( Compass_Setup_Mode == 1) && (Changed ==0 ))  {
           Compass_Setup_Mode = 2;
           Changed = 1;
-          Comp_Mode_btn.initButton(&tft, Pos_X4, Pos_Y4, Button_W, Button_H, WHITE, YELLOW, BLACK, "Manuel", 2);
+          Comp_Mode_btn.initButton(&tft, Pos_X4, Pos_Y4, Button_W, Button_H, WHITE, YELLOW, BLACK, "DFRobot 2", 2);
           Comp_Mode_btn.drawButton(false);
           }
         
         if (( Compass_Setup_Mode == 2) && (Changed ==0 )) {
           Compass_Setup_Mode = 3;
           Changed = 1;
-          Comp_Mode_btn.initButton(&tft, Pos_X4, Pos_Y4, Button_W, Button_H, WHITE, BLUE, WHITE, "HMC5883L", 2);
+          Comp_Mode_btn.initButton(&tft, Pos_X4, Pos_Y4, Button_W, Button_H, WHITE, BLUE, WHITE, "DFRobot 3", 2);
           Comp_Mode_btn.drawButton(false);
         }
   delay(200);

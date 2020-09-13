@@ -17,6 +17,7 @@ SoftwareSerial NodeMCU(D2,D3);   //RXD2 TXD3
 
 char auth[] = "Blynk Token Number";
 
+
 // Your WiFi credentials.
 // Set password to "" for open networks.
 char ssid[] = "WIFI NAME";
@@ -40,7 +41,14 @@ int Mower_Running_Filter;
 int Mower_Lost;
 int Charge_Detected;
 int Tracking_Wire;
+
+int Update_APP_Buttons;
+
 int Compass_Heading_Lock;
+
+int Compass_Activate;
+int Compass_Heading_Hold_Enabled;
+int GYRO_Enabled;
 
 int i;                              // Transmit blank code
 
@@ -60,6 +68,18 @@ int All;
 int RX_Data_Recieved;
 int lastConnectionAttempt = millis();
 int connectionDelay = 5000; // try to reconnect every 5 seconds
+
+// MEGA Check
+int Loop_Cycle_Mowing_Check_1;
+int Loop_Cycle_Mowing_Check_2;
+float val_VoltNow_Check_1;
+float val_VoltNow_Check_2;
+int Check_MEGA = 0;
+int Error_Loop;
+int Error_Volt;
+int Total_Error;
+int Max_Error = 40;
+bool MEGA_Watch_Enabled = 1;
 
 BlynkTimer timer;
 WidgetLCD lcd(V6);
@@ -88,6 +108,9 @@ void setup()
   Serial.println("");
   pinMode(D2,INPUT);
   pinMode(D3,OUTPUT);
+  pinMode(D5,OUTPUT);
+  pinMode(D6,OUTPUT);
+  digitalWrite(D5, HIGH);
   digitalWrite(LED, HIGH);                          // Turn off LED Light
   WIFI_Connect();                                   // Connect to the WIFI
   Clear_APP();
@@ -156,9 +179,19 @@ void loop()  {
   else {
     Blynk.run();
     timer.run();  
-    digitalWrite(LED, LOW);         //LED is inverted on a MODEMCU...
-    Receive_All_From_MEGA();
+    digitalWrite(LED, LOW);         //LED is inverted on a MODEMCU...        
+    if ((Update_APP_Buttons == 3) && ((Mower_Docked == 1) || (Mower_Parked ==1)) ) {
+      delay(1500);
+      for (int i = 0; i <= 3; i++) { 
+       Recieve_App_Button_Status();
+       delay(235);
+       Serial.println(""); 
+       }
+      Update_APP_Buttons = 4;
+      }
+    else  Receive_All_From_MEGA();
     Update_Blynk_App_With_Status();
+    if (MEGA_Watch_Enabled == 1) Check_MEGA_Status();
     Serial.println("");     // new line serial monitor
   }
 

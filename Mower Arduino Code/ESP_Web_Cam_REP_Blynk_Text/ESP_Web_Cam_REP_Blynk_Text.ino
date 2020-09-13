@@ -17,13 +17,11 @@
 
 #include "camera_pins.h"
 
-//const char* ssid = "WLAN Name";
-//const char* password = "WLAN Password";
-
 const char* ssid = "WLAN Name";
-const char* pass = "WLAN Password";
+const char* password = "WLAN Password";
 
-char auth[] = "Blynk Code";  // BLYNk Code for AITHINKER
+
+char auth[] = "Blynk Auth Code";  // BLYNk Code for AITHINKER
 
 #define LED_BUILTIN 4
 BlynkTimer timer;
